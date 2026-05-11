@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Mr. Charlie – Entrega</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --brown: #2C1A0E; --caramel: #C8832A; --cream: #FDF6EC;
+    --green: #2D7A4F; --red: #C0392B; --gray: #7A6A5A;
+  }
+  body {
+    background: var(--brown); min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center; font-family: 'DM Sans', sans-serif; padding: 24px;
+  }
+  body::before {
+    content: ''; position: fixed; inset: 0;
+    background: radial-gradient(ellipse at 30% 20%, #3d2510 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 80%, #1a0f06 0%, transparent 50%);
+    pointer-events: none;
+  }
+  .card {
+    background: var(--cream); border-radius: 24px; padding: 40px 28px;
+    width: 100%; max-width: 380px; position: relative; z-index: 1;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.5);
+  }
+  .logo { text-align: center; margin-bottom: 32px; }
+  .logo-icon { font-size: 52px; display: block; margin-bottom: 10px; }
+  .logo h1 { font-family: 'Syne', sans-serif; font-size: 24px; font-weight: 800; color: var(--brown); }
+  .logo p { font-size: 13px; color: var(--gray); margin-top: 4px; }
+  .pedido-badge {
+    background: #F5EDE0; border-radius: 12px; padding: 12px 16px;
+    text-align: center; margin-bottom: 28px;
+  }
+  .pedido-badge .label { font-size: 11px; color: var(--gray); text-transform: uppercase; letter-spacing: 0.5px; }
+  .pedido-badge .value { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; color: var(--brown); margin-top: 2px; }
+  .status-box {
+    background: #F5EDE0; border-radius: 16px; padding: 18px;
+    margin-bottom: 20px; text-align: center; display: none;
+  }
+  .status-dot {
+    width: 12px; height: 12px; border-radius: 50%; background: var(--gray);
+    display: inline-block; margin-right: 8px; vertical-align: middle; transition: background 0.3s;
+  }
+  .status-dot.active {
+    background: var(--green); box-shadow: 0 0 0 4px rgba(45,122,79,0.2);
+    animation: pulse 1.5s infinite;
+  }
+  .status-dot.error { background: var(--red); }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 4px rgba(45,122,79,0.2); }
+    50%       { box-shadow: 0 0 0 8px rgba(45,122,79,0.05); }
+  }
+  .status-text { font-size: 14px; font-weight: 500; color: var(--brown); vertical-align: middle; }
+  .coords { font-size: 11px; color: var(--gray); margin-top: 6px; font-family: monospace; min-height: 16px; }
+  .btn {
+    width: 100%; padding: 18px; border: none; border-radius: 14px;
+    font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 700;
+    cursor: pointer; transition: all 0.2s; letter-spacing: 0.3px;
+  }
+  .btn-start { background: var(--green); color: white; margin-bottom: 12px; }
+  .btn-start:hover { background: #236040; transform: translateY(-1px); }
+  .btn-start:active { transform: translateY(0); }
+  .btn-start:disabled { background: #D4C4B0; cursor: not-allowed; transform: none; }
+  .btn-stop { background: transparent; color: var(--red); border: 2px solid var(--red); display: none; }
+  .btn-stop:hover { background: var(--red); color: white; }
+  .info-box {
+    background: #EDF7F2; border: 1px solid #B8DEC9; border-radius: 12px;
+    padding: 14px 16px; margin-top: 16px; font-size: 13px; color: #1a5c38; line-height: 1.6;
+  }
+  .info-box strong { display: block; margin-bottom: 4px; }
+  .update-log { margin-top: 14px; font-size: 11px; color: var(--gray); text-align: center; min-height: 16px; }
+  .inactivity-bar { margin-top: 14px; display: none; }
+  .inactivity-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--gray); margin-bottom: 6px; }
+  .inactivity-label span:last-child { font-weight: 600; color: var(--caramel); }
+  .inactivity-label span:last-child.urgent { color: var(--red); }
+  .bar-track { height: 6px; background: #E8DDD0; border-radius: 99px; overflow: hidden; }
+  .bar-fill { height: 100%; background: var(--caramel); border-radius: 99px; transition: width 1s linear, background 0.3s; width: 100%; }
+  .bar-fill.urgent { background: var(--red); }
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(44,26,14,0.85); z-index: 9999;
+    display: none; align-items: center; justify-content: center;
+    padding: 24px; backdrop-filter: blur(4px);
+  }
+  .modal-overlay.show { display: flex; }
+  .modal-box {
+    background: var(--cream); border-radius: 20px; padding: 32px 24px;
+    text-align: center; max-width: 320px; width: 100%; animation: modalIn 0.3s ease;
+  }
+  @keyframes modalIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  .modal-icon { font-size: 44px; margin-bottom: 12px; }
+  .modal-box h3 { font-family: 'Syne', sans-serif; font-size: 18px; color: var(--brown); margin-bottom: 8px; }
+  .modal-box p { font-size: 13px; color: var(--gray); line-height: 1.6; margin-bottom: 16px; }
+  .modal-countdown { font-family: 'Syne', sans-serif; font-size: 40px; font-weight: 800; color: var(--red); margin-bottom: 20px; }
+  .modal-btn-continue {
+    width: 100%; padding: 14px; background: var(--green); color: white;
+    border: none; border-radius: 12px; font-family: 'Syne', sans-serif;
+    font-size: 15px; font-weight: 700; cursor: pointer; margin-bottom: 10px;
+  }
+  .modal-btn-end {
+    width: 100%; padding: 14px; background: transparent; color: var(--red);
+    border: 2px solid var(--red); border-radius: 12px; font-family: 'Syne', sans-serif;
+    font-size: 15px; font-weight: 700; cursor: pointer;
+  }
+  .error-card { text-align: center; padding: 20px 0; }
+  .error-card .icon { font-size: 48px; margin-bottom: 16px; }
+  .error-card h2 { font-family: 'Syne', sans-serif; font-size: 18px; color: var(--brown); margin-bottom: 8px; }
+  .error-card p { font-size: 13px; color: var(--gray); line-height: 1.6; }
+
+  /* Loading inicial */
+  .loading { text-align: center; padding: 20px 0; color: var(--gray); font-size: 14px; }
+  .loading span { display: inline-block; animation: spin 1s linear infinite; font-size: 24px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="logo">
+    <span class="logo-icon">🛵</span>
+    <h1>Mr. Charlie</h1>
+    <p>Painel do Entregador</p>
+  </div>
+
+  <!-- Loading enquanto busca dados -->
+  <div class="loading" id="loadingSection">
+    <span>⏳</span><br>Carregando entrega…
+  </div>
+
+  <!-- Erro -->
+  <div class="error-card" id="errorSection" style="display:none;">
+    <div class="icon">🔗</div>
+    <h2>Link inválido</h2>
+    <p>Este link está incompleto. Solicite um novo link à loja.</p>
+  </div>
+
+  <!-- Conteúdo principal -->
+  <div id="mainSection" style="display:none;">
+    <div class="pedido-badge">
+      <div class="label">Pedido</div>
+      <div class="value" id="pedidoLabel">–</div>
+    </div>
+
+    <div class="status-box" id="statusBox">
+      <span class="status-dot" id="dot"></span>
+      <span class="status-text" id="statusText">Aguardando GPS…</span>
+      <div class="coords" id="coords"></div>
+    </div>
+
+    <button class="btn btn-start" id="btnStart">🟢 Iniciar Entrega</button>
+    <button class="btn btn-stop" id="btnStop">⛔ Encerrar Entrega</button>
+
+    <div class="info-box">
+      <strong>📌 Importante</strong>
+      Mantenha esta página aberta durante toda a entrega. Sua localização será enviada ao cliente automaticamente.
+    </div>
+
+    <div class="update-log" id="updateLog"></div>
+
+    <div class="inactivity-bar" id="inactivityBar">
+      <div class="inactivity-label">
+        <span>⏱ Encerramento automático</span>
+        <span id="inactivityTimer">10:00</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill" id="barFill"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal inatividade -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-box">
+    <div class="modal-icon">⏰</div>
+    <h3>Você ainda está em entrega?</h3>
+    <p>Nenhuma movimentação detectada. O rastreio será encerrado em:</p>
+    <div class="modal-countdown" id="modalCountdown">30</div>
+    <button class="modal-btn-continue" id="btnContinuar">✅ Ainda estou entregando</button>
+    <button class="modal-btn-end" id="btnEncerrarModal">⛔ Encerrar entrega</button>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getDatabase, ref, set, onDisconnect } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+  const DB_RAIZ = 'https://rastreia-pedido-default-rtdb.firebaseio.com';
+  const params  = new URLSearchParams(window.location.search);
+  const codigo  = params.get('c');
+  let pedidoKey = params.get('pedido');
+  let dbUrl     = params.get('db') || DB_RAIZ;
+
+  function mostrarErro() {
+    document.getElementById('loadingSection').style.display = 'none';
+    document.getElementById('errorSection').style.display = 'block';
+  }
+
+  // Busca parâmetros no Firebase se vier código curto
+  if (codigo && !pedidoKey) {
+    try {
+      const r = await fetch(`${DB_RAIZ}/links/${codigo}.json`);
+      const d = await r.json();
+      if (!d || !d.pedido) { mostrarErro(); throw new Error('stop'); }
+      pedidoKey = d.pedido;
+      dbUrl     = d.db || DB_RAIZ;
+    } catch(e) {
+      if (e.message !== 'stop') mostrarErro();
+    }
+  }
+
+  if (!pedidoKey) { mostrarErro(); }
+  else {
+    // Mostra painel principal
+    document.getElementById('loadingSection').style.display = 'none';
+    document.getElementById('mainSection').style.display = 'block';
+    document.getElementById('pedidoLabel').textContent = '#' + pedidoKey.replace('pedido_', '');
+
+    // Inicializa Firebase
+    let db;
+    try {
+      const app = initializeApp({ databaseURL: dbUrl }, 'motoboy-' + Date.now());
+      db = getDatabase(app);
+    } catch(e) { mostrarErro(); }
+
+    // ── Variáveis de estado ─────────────────────────────
+    const INACTIVITY_LIMIT   = 10 * 60;
+    const MODAL_COUNTDOWN    = 30;
+    const MOVEMENT_THRESHOLD = 15;
+
+    let inactivitySeconds = 0, inactivityInterval = null;
+    let modalInterval = null, modalSecondsLeft = MODAL_COUNTDOWN;
+    let lastLat = null, lastLng = null, modalOpen = false;
+    let watchId, pedidoRef;
+
+    // ── Funções utilitárias ─────────────────────────────
+    function calcDistance(lat1, lng1, lat2, lng2) {
+      const R = 6371000, dLat=(lat2-lat1)*Math.PI/180, dLng=(lng2-lng1)*Math.PI/180;
+      const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)**2;
+      return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    }
+
+    function atualizarBarra() {
+      const restante = INACTIVITY_LIMIT - inactivitySeconds;
+      const pct = (restante / INACTIVITY_LIMIT) * 100;
+      const urgent = restante <= 120;
+      document.getElementById('inactivityTimer').textContent =
+        `${String(Math.floor(restante/60)).padStart(2,'0')}:${String(restante%60).padStart(2,'0')}`;
+      document.getElementById('inactivityTimer').className = urgent ? 'urgent' : '';
+      document.getElementById('barFill').style.width = pct + '%';
+      document.getElementById('barFill').className = 'bar-fill' + (urgent ? ' urgent' : '');
+    }
+
+    function iniciarTimer() {
+      document.getElementById('inactivityBar').style.display = 'block';
+      inactivitySeconds = 0;
+      clearInterval(inactivityInterval);
+      inactivityInterval = setInterval(() => {
+        if (modalOpen) return;
+        inactivitySeconds++;
+        atualizarBarra();
+        if (inactivitySeconds >= INACTIVITY_LIMIT) { clearInterval(inactivityInterval); abrirModal(); }
+      }, 1000);
+    }
+
+    function abrirModal() {
+      modalOpen = true; modalSecondsLeft = MODAL_COUNTDOWN;
+      document.getElementById('modalCountdown').textContent = modalSecondsLeft;
+      document.getElementById('modalOverlay').classList.add('show');
+      modalInterval = setInterval(() => {
+        modalSecondsLeft--;
+        document.getElementById('modalCountdown').textContent = modalSecondsLeft;
+        if (modalSecondsLeft <= 0) { clearInterval(modalInterval); pararRastreio(); }
+      }, 1000);
+    }
+
+    function fecharModal() {
+      if (!modalOpen) return;
+      modalOpen = false; clearInterval(modalInterval);
+      document.getElementById('modalOverlay').classList.remove('show');
+    }
+
+    // ── Ações principais ────────────────────────────────
+    function iniciarRastreio() {
+      if (!navigator.geolocation) { alert('Geolocalização não suportada neste dispositivo.'); return; }
+
+      document.getElementById('btnStart').disabled = true;
+      document.getElementById('btnStart').textContent = '📡 Transmitindo…';
+      document.getElementById('btnStop').style.display = 'block';
+      document.getElementById('statusBox').style.display = 'block';
+      document.getElementById('dot').className = 'status-dot active';
+      document.getElementById('statusText').textContent = 'Transmitindo localização';
+
+      pedidoRef = ref(db, `entregas/${pedidoKey}`);
+      onDisconnect(pedidoRef).update({ ativo: false, encerradoEm: new Date().toISOString() });
+      iniciarTimer();
+
+      watchId = navigator.geolocation.watchPosition(
+        (pos) => {
+          const { latitude, longitude, accuracy } = pos.coords;
+          if (lastLat !== null && calcDistance(lastLat, lastLng, latitude, longitude) >= MOVEMENT_THRESHOLD) {
+            fecharModal(); inactivitySeconds = 0; iniciarTimer();
+          }
+          lastLat = latitude; lastLng = longitude;
+          set(pedidoRef, {
+            lat: latitude, lng: longitude,
+            accuracy: Math.round(accuracy),
+            atualizadoEm: new Date().toISOString(),
+            ativo: true
+          });
+          document.getElementById('coords').textContent =
+            `${latitude.toFixed(6)}, ${longitude.toFixed(6)} · ±${Math.round(accuracy)}m`;
+          document.getElementById('updateLog').textContent =
+            `Última atualização: ${new Date().toLocaleTimeString('pt-BR')}`;
+        },
+        (err) => {
+          document.getElementById('dot').className = 'status-dot error';
+          document.getElementById('statusText').textContent = 'Erro de GPS: ' + err.message;
+        },
+        { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+      );
+    }
+
+    function pararRastreio() {
+      if (watchId) navigator.geolocation.clearWatch(watchId);
+      clearInterval(inactivityInterval); fecharModal();
+      if (pedidoRef) set(pedidoRef, { ativo: false, encerradoEm: new Date().toISOString() });
+      document.getElementById('dot').className = 'status-dot';
+      document.getElementById('statusText').textContent = 'Entrega encerrada';
+      document.getElementById('btnStop').style.display = 'none';
+      document.getElementById('btnStart').textContent = '✅ Entrega Encerrada';
+      document.getElementById('btnStart').style.background = '#D4C4B0';
+      document.getElementById('btnStart').disabled = true;
+      document.getElementById('inactivityBar').style.display = 'none';
+      document.getElementById('updateLog').textContent =
+        `Encerrado às ${new Date().toLocaleTimeString('pt-BR')}`;
+    }
+
+    function continuarRastreio() {
+      fecharModal(); inactivitySeconds = 0; iniciarTimer();
+    }
+
+    // ── Event listeners (sem onclick inline) ───────────
+    document.getElementById('btnStart').addEventListener('click', iniciarRastreio);
+    document.getElementById('btnStop').addEventListener('click', pararRastreio);
+    document.getElementById('btnContinuar').addEventListener('click', continuarRastreio);
+    document.getElementById('btnEncerrarModal').addEventListener('click', pararRastreio);
+  }
+</script>
+</body>
+</html>

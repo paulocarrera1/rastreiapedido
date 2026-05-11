@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RastreiaJá – Rastreamento de Entregas Gratuito</title>
+<meta name="description" content="Sistema gratuito de rastreamento de entregas em tempo real para restaurantes, confeitarias, farmácias e qualquer estabelecimento. Sem app, sem cadastro de cartão.">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<!-- Cole aqui seu código do Google AdSense -->
+<!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script> -->
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+:root { --ink:#0A0A0F; --paper:#F7F5F0; --acid:#C8F000; --accent:#FF4D1C; --muted:#6B6B7B; --border:#E2E0DA; --card:#FFFFFF; }
+html { scroll-behavior:smooth; }
+body { font-family:'Plus Jakarta Sans',sans-serif; background:var(--paper); color:var(--ink); overflow-x:hidden; }
+
+.header { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; align-items:center; justify-content:space-between; padding:16px 40px; background:rgba(247,245,240,0.85); backdrop-filter:blur(16px); border-bottom:1px solid var(--border); }
+.logo { font-family:'Bebas Neue',sans-serif; font-size:28px; letter-spacing:1px; color:var(--ink); text-decoration:none; }
+.logo span { color:var(--accent); }
+.header-cta { background:var(--ink); color:var(--paper); padding:10px 24px; border-radius:100px; font-size:14px; font-weight:600; text-decoration:none; transition:all 0.2s; }
+.header-cta:hover { background:var(--accent); }
+
+.hero { min-height:100vh; display:flex; flex-direction:column; justify-content:center; padding:120px 40px 80px; position:relative; overflow:hidden; }
+.hero-bg { position:absolute; inset:0; pointer-events:none; background: radial-gradient(ellipse 60% 50% at 80% 50%, rgba(200,240,0,0.12) 0%, transparent 70%), radial-gradient(ellipse 40% 60% at 10% 80%, rgba(255,77,28,0.06) 0%, transparent 60%); }
+.hero-tag { display:inline-flex; align-items:center; gap:8px; background:var(--acid); color:var(--ink); padding:6px 16px; border-radius:100px; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:1px; margin-bottom:32px; width:fit-content; }
+.hero-tag::before { content:'●'; font-size:8px; animation:blink 1.5s infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+.hero h1 { font-family:'Bebas Neue',sans-serif; font-size:clamp(64px,10vw,140px); line-height:0.92; letter-spacing:-1px; margin-bottom:32px; max-width:900px; }
+.hero h1 .line2 { color:var(--accent); }
+.hero-sub { font-size:clamp(16px,2vw,20px); color:var(--muted); max-width:560px; line-height:1.6; margin-bottom:48px; }
+.hero-actions { display:flex; gap:16px; flex-wrap:wrap; align-items:center; }
+.btn-primary { background:var(--ink); color:var(--paper); padding:16px 36px; border-radius:100px; font-size:16px; font-weight:700; text-decoration:none; transition:all 0.2s; display:inline-flex; align-items:center; gap:10px; }
+.btn-primary:hover { background:var(--accent); transform:translateY(-2px); box-shadow:0 12px 32px rgba(255,77,28,0.25); }
+.btn-secondary { color:var(--ink); font-size:15px; font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:6px; border-bottom:2px solid var(--ink); padding-bottom:2px; transition:all 0.2s; }
+.btn-secondary:hover { color:var(--accent); border-color:var(--accent); }
+.hero-stats { display:flex; gap:48px; margin-top:80px; padding-top:48px; border-top:1px solid var(--border); flex-wrap:wrap; }
+.stat-item .num { font-family:'Bebas Neue',sans-serif; font-size:48px; color:var(--ink); line-height:1; }
+.stat-item .num span { color:var(--accent); }
+.stat-item .desc { font-size:13px; color:var(--muted); margin-top:4px; }
+
+.ad-strip { background:var(--ink); padding:20px 40px; display:flex; align-items:center; justify-content:center; min-height:100px; border-top:3px solid var(--acid); }
+.ad-placeholder { width:100%; max-width:728px; height:90px; border:2px dashed rgba(255,255,255,0.15); border-radius:8px; display:flex; align-items:center; justify-content:center; color:rgba(255,255,255,0.3); font-size:12px; letter-spacing:1px; text-transform:uppercase; }
+
+.section { padding:100px 40px; }
+.section-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:var(--accent); margin-bottom:16px; }
+.section-title { font-family:'Bebas Neue',sans-serif; font-size:clamp(42px,6vw,80px); line-height:0.95; margin-bottom:64px; max-width:700px; }
+
+.steps { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:2px; }
+.step { background:var(--card); padding:40px 32px; border:1px solid var(--border); transition:all 0.25s; position:relative; overflow:hidden; }
+.step:first-child { border-radius:20px 0 0 20px; }
+.step:last-child  { border-radius:0 20px 20px 0; }
+.step::before { content:''; position:absolute; inset:0; background:var(--acid); transform:translateY(100%); transition:transform 0.35s cubic-bezier(0.4,0,0.2,1); z-index:0; }
+.step:hover::before { transform:translateY(0); }
+.step > * { position:relative; z-index:1; }
+.step-num { font-family:'Bebas Neue',sans-serif; font-size:64px; color:var(--border); line-height:1; margin-bottom:20px; transition:color 0.3s; }
+.step-icon { font-size:32px; margin-bottom:16px; }
+.step h3 { font-size:20px; font-weight:700; margin-bottom:10px; }
+.step p { font-size:14px; color:var(--muted); line-height:1.6; transition:color 0.3s; }
+.step:hover p { color:rgba(0,0,0,0.6); }
+
+.cadastro-section { padding:100px 40px; background:var(--ink); color:var(--paper); position:relative; overflow:hidden; }
+.cadastro-section::before { content:'GRÁTIS'; font-family:'Bebas Neue',sans-serif; font-size:280px; position:absolute; right:-20px; top:50%; transform:translateY(-50%); opacity:0.04; letter-spacing:-10px; pointer-events:none; color:var(--acid); white-space:nowrap; }
+.cadastro-inner { max-width:680px; position:relative; z-index:1; }
+.cadastro-section .section-label { color:var(--acid); }
+.cadastro-section .section-title { color:var(--paper); margin-bottom:48px; }
+
+.form-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px; }
+.field label { display:block; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:1px; color:rgba(247,245,240,0.5); margin-bottom:8px; }
+.field input, .field select { width:100%; padding:14px 18px; background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.12); border-radius:12px; color:var(--paper); font-family:'Plus Jakarta Sans',sans-serif; font-size:15px; transition:all 0.2s; }
+.field input::placeholder { color:rgba(247,245,240,0.3); }
+.field input:focus, .field select:focus { outline:none; border-color:var(--acid); background:rgba(200,240,0,0.06); }
+.field select option { background:#1a1a2e; color:white; }
+
+.color-row { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+.color-opt { width:36px; height:36px; border-radius:50%; cursor:pointer; border:3px solid transparent; transition:all 0.2s; }
+.color-opt:hover, .color-opt.selected { border-color:white; transform:scale(1.15); }
+
+.btn-cadastrar { width:100%; padding:18px; background:var(--acid); color:var(--ink); border:none; border-radius:14px; font-family:'Plus Jakarta Sans',sans-serif; font-size:16px; font-weight:800; cursor:pointer; transition:all 0.2s; margin-top:8px; }
+.btn-cadastrar:hover { background:#d4ff00; transform:translateY(-2px); }
+.btn-cadastrar:disabled { background:#555; color:#888; cursor:not-allowed; transform:none; }
+.form-note { font-size:12px; color:rgba(247,245,240,0.35); margin-top:14px; text-align:center; }
+
+.success-box { background:rgba(200,240,0,0.1); border:1px solid var(--acid); border-radius:16px; padding:32px; margin-top:24px; display:none; }
+.success-box h3 { font-family:'Bebas Neue',sans-serif; font-size:28px; color:var(--acid); margin-bottom:12px; }
+.success-box p { font-size:14px; color:rgba(247,245,240,0.7); line-height:1.6; margin-bottom:20px; }
+.success-link { display:block; background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.15); border-radius:10px; padding:12px 16px; font-family:monospace; font-size:13px; color:var(--acid); word-break:break-all; margin-bottom:12px; }
+.btn-copiar-link { width:100%; padding:14px; background:var(--acid); color:var(--ink); border:none; border-radius:10px; font-family:'Plus Jakarta Sans',sans-serif; font-size:14px; font-weight:700; cursor:pointer; }
+
+.segmentos { padding:100px 40px; }
+.segmentos-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:16px; margin-top:48px; }
+.seg-card { background:var(--card); border:1px solid var(--border); border-radius:20px; padding:32px 24px; text-align:center; transition:all 0.25s; }
+.seg-card:hover { border-color:var(--ink); transform:translateY(-4px); box-shadow:0 16px 40px rgba(0,0,0,0.08); }
+.seg-icon { font-size:40px; margin-bottom:12px; }
+.seg-card h4 { font-size:15px; font-weight:700; }
+
+footer { background:var(--ink); color:rgba(247,245,240,0.4); padding:40px; text-align:center; font-size:13px; }
+footer a { color:var(--acid); text-decoration:none; }
+
+.erro-form { color:#ff6b6b; font-size:13px; margin-top:12px; display:none; }
+.spin { display:inline-block; animation:rot 1s linear infinite; }
+@keyframes rot { to{transform:rotate(360deg)} }
+
+@media(max-width:768px) {
+  .header { padding:14px 20px; }
+  .hero { padding:100px 20px 60px; }
+  .hero-stats { gap:32px; }
+  .section { padding:70px 20px; }
+  .form-grid { grid-template-columns:1fr; }
+  .cadastro-section { padding:70px 20px; }
+  .step:first-child { border-radius:20px 20px 0 0; }
+  .step:last-child  { border-radius:0 0 20px 20px; }
+  .segmentos { padding:70px 20px; }
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <a class="logo" href="#">Rastreia<span>Já</span></a>
+  <a class="header-cta" href="#cadastro">Cadastrar minha loja</a>
+</header>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-tag">Sistema Gratuito</div>
+  <h1>ENTREGA<br><span class="line2">EM TEMPO</span><br>REAL</h1>
+  <p class="hero-sub">Seu cliente acompanha o motoboy no mapa. Sem app, sem mensalidade, sem complicação. Funciona em qualquer celular.</p>
+  <div class="hero-actions">
+    <a href="#cadastro" class="btn-primary">🚀 Começar agora — é grátis</a>
+    <a href="#como-funciona" class="btn-secondary">Ver como funciona →</a>
+  </div>
+  <div class="hero-stats">
+    <div class="stat-item"><div class="num">100<span>%</span></div><div class="desc">Gratuito para sempre</div></div>
+    <div class="stat-item"><div class="num">0</div><div class="desc">Instalação necessária</div></div>
+    <div class="stat-item"><div class="num">30<span>s</span></div><div class="desc">Para começar a usar</div></div>
+  </div>
+</section>
+
+<div class="ad-strip">
+  <!-- Cole aqui o código do AdSense (728x90) -->
+  <div class="ad-placeholder">Espaço publicitário · 728×90</div>
+</div>
+
+<section class="section" id="como-funciona">
+  <div class="section-label">Como funciona</div>
+  <div class="section-title">TRÊS PASSOS. SEM COMPLICAÇÃO.</div>
+  <div class="steps">
+    <div class="step"><div class="step-num">01</div><div class="step-icon">🏪</div><h3>Cadastre sua loja</h3><p>Nome, segmento e cor. Em 30 segundos você tem seu painel personalizado pronto.</p></div>
+    <div class="step"><div class="step-num">02</div><div class="step-icon">🔗</div><h3>Gere os links</h3><p>Digite o endereço do cliente. O sistema cria dois links curtos: um pro motoboy e um pro cliente.</p></div>
+    <div class="step"><div class="step-num">03</div><div class="step-icon">📍</div><h3>Rastreio em tempo real</h3><p>O cliente vê o motoboy se mover no mapa com a rota traçada. Sem instalar nada.</p></div>
+  </div>
+</section>
+
+<section class="cadastro-section" id="cadastro">
+  <div class="cadastro-inner">
+    <div class="section-label">Cadastro gratuito</div>
+    <div class="section-title">MINHA LOJA<br>NO SISTEMA</div>
+    <div id="formCadastro">
+      <div class="form-grid">
+        <div class="field"><label>Nome do estabelecimento</label><input type="text" id="nomeEstab" placeholder="Ex: Padaria da Maria"></div>
+        <div class="field"><label>Segmento</label>
+          <select id="segmento">
+            <option value="🍰">🍰 Confeitaria / Doceria</option>
+            <option value="🍕">🍕 Pizzaria / Lanchonete</option>
+            <option value="🍱">🍱 Restaurante / Marmita</option>
+            <option value="💊">💊 Farmácia / Drogaria</option>
+            <option value="🌸">🌸 Floricultura</option>
+            <option value="🛒">🛒 Mercado / Conveniência</option>
+            <option value="👕">👕 Loja de Roupas</option>
+            <option value="📦">📦 Outro</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-grid">
+        <div class="field"><label>Endereço da loja</label><input type="text" id="endLoja" placeholder="Rua, número, cidade"></div>
+        <div class="field"><label>ID único (para sua URL)</label><input type="text" id="slugLoja" placeholder="Ex: padaria-maria" maxlength="30" oninput="this.value=this.value.toLowerCase().replace(/[^a-z0-9-]/g,'-')"></div>
+      </div>
+      <div class="field" style="margin-bottom:20px;">
+        <label>Cor principal</label>
+        <div class="color-row" id="colorRow">
+          <div class="color-opt selected" data-color="#C8832A" style="background:#C8832A"></div>
+          <div class="color-opt" data-color="#E53935" style="background:#E53935"></div>
+          <div class="color-opt" data-color="#1E88E5" style="background:#1E88E5"></div>
+          <div class="color-opt" data-color="#43A047" style="background:#43A047"></div>
+          <div class="color-opt" data-color="#8E24AA" style="background:#8E24AA"></div>
+          <div class="color-opt" data-color="#F4511E" style="background:#F4511E"></div>
+          <div class="color-opt" data-color="#00897B" style="background:#00897B"></div>
+          <div class="color-opt" data-color="#2C1A0E" style="background:#2C1A0E"></div>
+        </div>
+      </div>
+      <button class="btn-cadastrar" id="btnCadastrar">Criar meu painel gratuito →</button>
+      <p class="form-note">Sem cartão. Sem mensalidade. 100% gratuito.</p>
+      <div class="erro-form" id="erroForm"></div>
+    </div>
+    <div class="success-box" id="successBox">
+      <h3>✅ Cadastro realizado!</h3>
+      <p>Seu painel está pronto. Salve o link abaixo para acessar sempre que precisar gerar links de entrega.</p>
+      <div class="success-link" id="successLink">–</div>
+      <button class="btn-copiar-link" id="btnCopiarLink">📋 Copiar link do painel</button>
+    </div>
+  </div>
+</section>
+
+<div style="display:flex;justify-content:center;padding:48px 20px;background:var(--paper);">
+  <!-- Cole aqui o código do AdSense (300x250) -->
+  <div style="width:300px;height:250px;border:2px dashed var(--border);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:12px;letter-spacing:1px;text-transform:uppercase;">Espaço · 300×250</div>
+</div>
+
+<section class="segmentos">
+  <div class="section-label">Quem usa</div>
+  <div class="section-title">PARA TODO TIPO<br>DE NEGÓCIO</div>
+  <div class="segmentos-grid">
+    <div class="seg-card"><div class="seg-icon">🍰</div><h4>Confeitarias</h4></div>
+    <div class="seg-card"><div class="seg-icon">🍕</div><h4>Pizzarias</h4></div>
+    <div class="seg-card"><div class="seg-icon">🍱</div><h4>Restaurantes</h4></div>
+    <div class="seg-card"><div class="seg-icon">💊</div><h4>Farmácias</h4></div>
+    <div class="seg-card"><div class="seg-icon">🌸</div><h4>Floriculturas</h4></div>
+    <div class="seg-card"><div class="seg-icon">🛒</div><h4>Mercados</h4></div>
+  </div>
+</section>
+
+<footer>
+  <p>RastreiaJá © 2026 — Sistema gratuito de rastreamento de entregas</p>
+  <p style="margin-top:8px;">Feito com ❤️ para pequenos negócios brasileiros</p>
+</footer>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+  const DB_URL  = 'https://rastreia-pedido-default-rtdb.firebaseio.com';
+  const ORS_KEY = 'eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6IjY2NGU4YzIwOWY3ZTRiMzI5YjU0Njc5NGZmMTRkYTZhIiwiaCI6Im11cm11cjY0In0=';
+
+  const app = initializeApp({ databaseURL: DB_URL }, 'index-' + Date.now());
+  const db  = getDatabase(app);
+
+  let corSelecionada = '#C8832A';
+  document.getElementById('colorRow').addEventListener('click', (e) => {
+    const opt = e.target.closest('.color-opt');
+    if (!opt) return;
+    document.querySelectorAll('.color-opt').forEach(o => o.classList.remove('selected'));
+    opt.classList.add('selected');
+    corSelecionada = opt.dataset.color;
+  });
+
+  document.getElementById('btnCadastrar').addEventListener('click', async () => {
+    const nome    = document.getElementById('nomeEstab').value.trim();
+    const seg     = document.getElementById('segmento').value;
+    const endereco= document.getElementById('endLoja').value.trim();
+    const slug    = document.getElementById('slugLoja').value.trim();
+    const erro    = document.getElementById('erroForm');
+    const btn     = document.getElementById('btnCadastrar');
+    erro.style.display = 'none';
+    if (!nome)     { erro.textContent='⚠️ Preencha o nome do estabelecimento.'; erro.style.display='block'; return; }
+    if (!endereco) { erro.textContent='⚠️ Preencha o endereço da loja.'; erro.style.display='block'; return; }
+    if (!slug||slug.length<3) { erro.textContent='⚠️ ID deve ter pelo menos 3 caracteres.'; erro.style.display='block'; return; }
+    btn.disabled=true; btn.textContent='Verificando…';
+    const snapSlug = await get(ref(db, `lojas/${slug}`));
+    if (snapSlug.exists()) { erro.textContent='⚠️ Este ID já está em uso. Escolha outro.'; erro.style.display='block'; btn.disabled=false; btn.textContent='Criar meu painel gratuito →'; return; }
+    btn.textContent='Criando painel…';
+    await set(ref(db, `lojas/${slug}`), { nome, segmento:seg, endereco, cor:corSelecionada, orsKey:ORS_KEY, dbUrl:DB_URL, criadoEm:new Date().toISOString() });
+    const painelUrl = `${window.location.origin}/loja.html?loja=${slug}`;
+    document.getElementById('successLink').textContent = painelUrl;
+    document.getElementById('formCadastro').style.display='none';
+    document.getElementById('successBox').style.display='block';
+  });
+
+  document.getElementById('btnCopiarLink').addEventListener('click', () => {
+    navigator.clipboard.writeText(document.getElementById('successLink').textContent).then(() => {
+      const btn = document.getElementById('btnCopiarLink');
+      btn.textContent='✅ Copiado!';
+      setTimeout(()=>btn.textContent='📋 Copiar link do painel', 2000);
+    });
+  });
+</script>
+</body>
+</html>

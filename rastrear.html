@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Acompanhe sua entrega – RastreioJá</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+<!-- Cole aqui seu código do Google AdSense -->
+<!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script> -->
+
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root { --primary: #C8832A; --ink: #0A0A0F; --paper: #F7F5F0; --muted: #6B6B7B; --border: #E2E0DA; --green: #2D7A4F; --red: #C0392B; }
+body { background: var(--ink); height: 100dvh; display: flex; flex-direction: column; font-family: 'Plus Jakarta Sans', sans-serif; overflow: hidden; }
+
+.header { background: var(--paper); padding: 10px 16px; display: flex; align-items: center; gap: 10px; box-shadow: 0 2px 12px rgba(0,0,0,0.15); z-index: 1000; flex-shrink: 0; }
+.header-logo { font-size: 24px; line-height: 1; }
+.header-info { flex: 1; min-width: 0; }
+.header-info h1 { font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 0.3px; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.header-info p { font-size: 10px; color: var(--muted); }
+.status-pill { display: flex; align-items: center; gap: 5px; border-radius: 20px; padding: 5px 10px; font-size: 11px; font-weight: 600; transition: all 0.3s; background: #FFF8F0; border: 1px solid #F0D9B5; color: var(--primary); flex-shrink: 0; }
+.status-pill.online  { background: #EDF7F2; border-color: #B8DEC9; color: var(--green); }
+.status-pill.offline { background: #FEF0EE; border-color: #F5C2BB; color: var(--red); }
+.pill-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.pill-dot.pulse { animation: pp 1.4s infinite; }
+@keyframes pp { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.7)} }
+
+/* ANÚNCIO TOPO */
+.ad-top { background: var(--paper); display: flex; justify-content: center; align-items: center; padding: 6px; border-bottom: 1px solid var(--border); flex-shrink: 0; min-height: 60px; }
+.ad-box { width: 100%; max-width: 320px; height: 50px; border: 1px dashed var(--border); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 10px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
+
+#map { flex: 1; z-index: 1; }
+
+.bottom-card { background: var(--paper); padding: 14px 16px; z-index: 1000; box-shadow: 0 -4px 20px rgba(0,0,0,0.15); flex-shrink: 0; }
+.bottom-card h2 { font-family: 'Bebas Neue', sans-serif; font-size: 13px; color: var(--ink); margin-bottom: 8px; letter-spacing: 0.3px; }
+.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 10px; }
+.info-item { background: #F5EDE0; border-radius: 8px; padding: 8px 10px; }
+.info-item .lb { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 1px; }
+.info-item .vl { font-size: 12px; font-weight: 600; color: var(--ink); }
+
+/* ANÚNCIO RODAPÉ */
+.ad-bottom { background: var(--paper); border-top: 1px solid var(--border); display: flex; justify-content: center; align-items: center; padding: 6px; flex-shrink: 0; min-height: 60px; }
+
+.powered-bar { text-align: center; padding: 6px; background: var(--ink); font-size: 10px; color: rgba(247,245,240,0.3); flex-shrink: 0; }
+.powered-bar a { color: #C8F000; text-decoration: none; font-weight: 600; }
+
+.error-screen { position: fixed; inset: 0; background: var(--ink); display: none; align-items: center; justify-content: center; z-index: 9999; padding: 32px; }
+.error-card { background: var(--paper); border-radius: 24px; padding: 40px 32px; text-align: center; max-width: 340px; }
+.error-card .ic { font-size: 48px; margin-bottom: 16px; }
+.error-card h2 { font-family: 'Bebas Neue', sans-serif; font-size: 22px; color: var(--ink); margin-bottom: 8px; }
+.error-card p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-logo" id="hLogo">🏪</div>
+  <div class="header-info">
+    <h1 id="hNome">Acompanhe sua entrega</h1>
+    <p>Rastreamento em tempo real</p>
+  </div>
+  <div class="status-pill" id="statusPill">
+    <div class="pill-dot pulse" id="pillDot"></div>
+    <span id="statusLabel">Conectando…</span>
+  </div>
+</div>
+
+<!-- ANÚNCIO TOPO -->
+<div class="ad-top">
+  <!-- Substitua pelo código AdSense (320x50 mobile) -->
+  <div class="ad-box">Publicidade · 320×50</div>
+</div>
+
+<div id="map"></div>
+
+<div class="bottom-card">
+  <h2>📦 STATUS DA ENTREGA</h2>
+  <div class="info-grid">
+    <div class="info-item"><div class="lb">Situação</div><div class="vl" id="situacao">Aguardando…</div></div>
+    <div class="info-item"><div class="lb">Última atualização</div><div class="vl" id="ultimaAtt">–</div></div>
+    <div class="info-item"><div class="lb">Precisão GPS</div><div class="vl" id="precisao">–</div></div>
+    <div class="info-item"><div class="lb">Pedido</div><div class="vl" id="pedidoLabel">–</div></div>
+  </div>
+</div>
+
+<!-- ANÚNCIO RODAPÉ -->
+<div class="ad-bottom">
+  <!-- Substitua pelo código AdSense (320x50 mobile) -->
+  <div class="ad-box">Publicidade · 320×50</div>
+</div>
+
+<div class="powered-bar">Rastreio por <a href="index.html">RastreioJá</a> — Grátis para todos os negócios</div>
+
+<div class="error-screen" id="errorScreen">
+  <div class="error-card">
+    <div class="ic">🔗</div>
+    <h2>Link inválido</h2>
+    <p>Este link de rastreio expirou ou está incorreto.</p>
+  </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+  const DB_URL = 'https://rastreia-pedido-default-rtdb.firebaseio.com';
+  const params = new URLSearchParams(window.location.search);
+  const codigo = params.get('c');
+
+  function showError() { document.getElementById('errorScreen').style.display='flex'; }
+
+  if (!codigo) { showError(); } else {
+    // Busca dados do link no Firebase
+    const appTemp = initializeApp({ databaseURL: DB_URL }, 'rastrear-temp-' + Date.now());
+    const dbTemp  = getDatabase(appTemp);
+    const snapLink = await (await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js")).get(ref(dbTemp, `links/${codigo}`));
+
+    if (!snapLink.exists()) { showError(); } else {
+      const d = snapLink.val();
+      const cor = d.corLoja || '#C8832A';
+      document.documentElement.style.setProperty('--primary', cor);
+
+      // Personaliza com dados da loja
+      if (d.segLoja)  document.getElementById('hLogo').textContent = d.segLoja;
+      if (d.nomeLoja) document.getElementById('hNome').textContent = d.nomeLoja;
+      document.getElementById('pedidoLabel').textContent = d.pedido?.replace('pedido_','#') || '–';
+
+      const latL = parseFloat(d.latL), lngL = parseFloat(d.lngL);
+      const latC = parseFloat(d.latC), lngC = parseFloat(d.lngC);
+      const orsKey = d.ors;
+
+      // Mapa
+      const midLat = (latL+latC)/2, midLng = (lngL+lngC)/2;
+      const map = L.map('map',{zoomControl:true}).setView([midLat,midLng],13);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap',maxZoom:19}).addTo(map);
+
+      // Ícones
+      const mkLoja = L.divIcon({ className:'', html:`<div style="background:${cor};width:36px;height:36px;border-radius:50%;border:3px solid white;box-shadow:0 2px 10px rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;font-size:16px;">${d.segLoja||'🏪'}</div>`, iconSize:[36,36], iconAnchor:[18,18] });
+      const mkDest = L.divIcon({ className:'', html:`<div style="background:#2D7A4F;width:36px;height:36px;border-radius:50%;border:3px solid white;box-shadow:0 2px 10px rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;font-size:16px;">📍</div>`, iconSize:[36,36], iconAnchor:[18,18] });
+      const mkMoto = L.divIcon({ className:'', html:`<div style="background:${cor};width:44px;height:44px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:3px solid white;box-shadow:0 2px 16px rgba(0,0,0,0.35);display:flex;align-items:center;justify-content:center;"><span style="transform:rotate(45deg);font-size:20px;display:block;">🛵</span></div>`, iconSize:[44,44], iconAnchor:[22,44] });
+
+      L.marker([latL,lngL],{icon:mkLoja}).addTo(map).bindPopup(`<b>${d.nomeLoja||'Loja'}</b><br>Saída do pedido`);
+      L.marker([latC,lngC],{icon:mkDest}).addTo(map).bindPopup('<b>📍 Seu endereço</b>');
+
+      // Rota
+      let rotaCoords=[], trilhaLayer=null, rotaLayer=null, markerMoto=null;
+      let ultimaIdx=0, prevLat=null, prevLng=null;
+
+      try {
+        const rRes = await fetch('https://api.openrouteservice.org/v2/directions/driving-car/geojson',{
+          method:'POST', headers:{'Content-Type':'application/json','Authorization':orsKey},
+          body:JSON.stringify({coordinates:[[lngL,latL],[lngC,latC]]})
+        });
+        const rData = await rRes.json();
+        rotaCoords = rData.features[0].geometry.coordinates.map(c=>[c[1],c[0]]);
+        rotaLayer  = L.polyline(rotaCoords,{color:'#C0B8B0',weight:5,opacity:0.5,dashArray:'8,6'}).addTo(map);
+        trilhaLayer= L.polyline([],{color:cor,weight:5,opacity:0.9}).addTo(map);
+        map.fitBounds(rotaLayer.getBounds(),{padding:[40,40]});
+      } catch {
+        rotaLayer  = L.polyline([[latL,lngL],[latC,lngC]],{color:'#C0B8B0',weight:4,opacity:0.5,dashArray:'8,6'}).addTo(map);
+        trilhaLayer= L.polyline([],{color:cor,weight:4}).addTo(map);
+        rotaCoords = [[latL,lngL],[latC,lngC]];
+        map.fitBounds([[latL,lngL],[latC,lngC]],{padding:[60,60]});
+      }
+
+      function snapToRota(lat,lng) {
+        if (rotaCoords.length===0) return {lat,lng,idx:0};
+        let minD=Infinity, idx=0;
+        for (let i=ultimaIdx; i<Math.min(ultimaIdx+300,rotaCoords.length); i++) {
+          const dv=Math.hypot(rotaCoords[i][0]-lat,rotaCoords[i][1]-lng);
+          if (dv<minD){minD=dv;idx=i;}
+        }
+        ultimaIdx=Math.max(0,idx-5);
+        return {lat:rotaCoords[idx][0],lng:rotaCoords[idx][1],idx};
+      }
+
+      function animarMoto(fromLat,fromLng,toLat,toLng,steps=20){
+        let s=0; const dLat=(toLat-fromLat)/steps, dLng=(toLng-fromLng)/steps;
+        const iv=setInterval(()=>{s++;markerMoto.setLatLng([fromLat+dLat*s,fromLng+dLng*s]);if(s>=steps)clearInterval(iv);},50);
+      }
+
+      function atualizarMoto(lat,lng){
+        const p=snapToRota(lat,lng);
+        if (!markerMoto){
+          markerMoto=L.marker([p.lat,p.lng],{icon:mkMoto,zIndexOffset:1000}).addTo(map);
+          prevLat=p.lat; prevLng=p.lng;
+        } else {
+          animarMoto(prevLat,prevLng,p.lat,p.lng);
+          prevLat=p.lat; prevLng=p.lng;
+        }
+        if (trilhaLayer&&rotaCoords.length>0) trilhaLayer.setLatLngs(rotaCoords.slice(0,p.idx+1));
+        map.panTo([p.lat,p.lng],{animate:true,duration:1});
+      }
+
+      // Firebase listener
+      const app2=initializeApp({databaseURL:DB_URL},'rastrear-live-'+Date.now());
+      const db2=getDatabase(app2);
+      onValue(ref(db2,`entregas/${d.pedido}`),(snap)=>{
+        const data=snap.val();
+        const pill=document.getElementById('statusPill');
+        const lbl=document.getElementById('statusLabel');
+        const dot=document.getElementById('pillDot');
+
+        if (!data){
+          pill.className='status-pill'; lbl.textContent='Aguardando motoboy…';
+          document.getElementById('situacao').textContent='Aguardando saída'; return;
+        }
+        if (data.ativo===false){
+          pill.className='status-pill offline'; dot.className='pill-dot'; lbl.textContent='Entregue!';
+          document.getElementById('situacao').textContent='✅ Entregue!';
+          if (data.encerradoEm) document.getElementById('ultimaAtt').textContent=new Date(data.encerradoEm).toLocaleTimeString('pt-BR');
+          if (markerMoto) markerMoto.setLatLng([latC,lngC]);
+          if (trilhaLayer&&rotaCoords.length>0) trilhaLayer.setLatLngs(rotaCoords);
+          return;
+        }
+        pill.className='status-pill online'; dot.className='pill-dot pulse'; lbl.textContent='A caminho';
+        atualizarMoto(data.lat,data.lng);
+        document.getElementById('situacao').textContent='🛵 A caminho';
+        document.getElementById('ultimaAtt').textContent=new Date(data.atualizadoEm).toLocaleTimeString('pt-BR');
+        document.getElementById('precisao').textContent=data.accuracy?`±${data.accuracy}m`:'–';
+      });
+    }
+  }
+</script>
+</body>
+</html>

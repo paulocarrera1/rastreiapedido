@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Painel da Loja – RastreiaJá</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+:root { --primary:#C8832A; --ink:#0A0A0F; --paper:#F7F5F0; --muted:#6B6B7B; --border:#E2E0DA; --green:#2D7A4F; --red:#C0392B; }
+body { background:var(--ink); min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; font-family:'Plus Jakarta Sans',sans-serif; padding:24px; }
+body::before { content:''; position:fixed; inset:0; background:radial-gradient(ellipse at 30% 20%, rgba(200,131,42,0.15) 0%, transparent 60%); pointer-events:none; }
+.card { background:var(--paper); border-radius:24px; padding:36px 28px; width:100%; max-width:420px; position:relative; z-index:1; box-shadow:0 32px 80px rgba(0,0,0,0.6); }
+
+/* Logo */
+.logo-area { text-align:center; margin-bottom:24px; }
+.loja-icon { font-size:42px; display:block; margin-bottom:8px; }
+.loja-nome { font-family:'Bebas Neue',sans-serif; font-size:26px; color:var(--ink); }
+.loja-sub { font-size:12px; color:var(--muted); margin-top:2px; }
+.powered { font-size:10px; color:var(--muted); margin-top:8px; text-decoration:none; letter-spacing:0.5px; display:block; }
+.powered span { color:var(--primary); font-weight:600; }
+
+/* Banner premium/free */
+.plano-banner {
+  border-radius:12px; padding:12px 16px; margin-bottom:20px;
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+}
+.plano-banner.free { background:#FFF8F0; border:1.5px solid #F0D4A0; }
+.plano-banner.premium { background:#EDF7F2; border:1.5px solid #A8D8BC; }
+.plano-info .plano-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; color:var(--muted); }
+.plano-info .plano-valor { font-size:13px; font-weight:700; color:var(--ink); margin-top:2px; }
+.btn-upgrade {
+  padding:8px 14px; border:none; border-radius:8px;
+  font-family:'Plus Jakarta Sans',sans-serif; font-size:12px; font-weight:700;
+  cursor:pointer; white-space:nowrap; transition:all 0.2s;
+  background:var(--primary); color:white;
+}
+.btn-upgrade:hover { filter:brightness(1.1); transform:translateY(-1px); }
+.btn-upgrade:disabled { background:var(--border); color:var(--muted); transform:none; cursor:not-allowed; }
+
+/* Anúncio */
+.ad-strip {
+  background:var(--ink); border-radius:10px; margin-bottom:20px;
+  display:flex; align-items:center; justify-content:center;
+  min-height:70px; border:1px solid #222;
+}
+.ad-strip.hidden { display:none; }
+.ad-placeholder { font-size:10px; color:rgba(255,255,255,0.2); letter-spacing:1px; text-transform:uppercase; }
+
+/* Form */
+.section-title { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--muted); margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid var(--border); }
+label { font-size:12px; color:var(--muted); display:block; margin-bottom:4px; }
+input[type="text"] { width:100%; padding:11px 14px; border:1.5px solid var(--border); border-radius:10px; font-size:13px; color:var(--ink); background:white; margin-bottom:14px; font-family:'Plus Jakarta Sans',sans-serif; transition:border-color 0.2s; }
+input:focus { outline:none; border-color:var(--primary); }
+.loja-row { display:flex; gap:8px; align-items:flex-start; margin-bottom:14px; }
+.loja-row input { margin-bottom:0; flex:1; }
+.btn-edit { padding:11px 12px; border:1.5px solid var(--border); border-radius:10px; background:white; cursor:pointer; font-size:14px; color:var(--muted); transition:all 0.2s; flex-shrink:0; }
+.btn-edit:hover { border-color:var(--primary); }
+.btn-gerar { width:100%; padding:15px; border:none; border-radius:12px; font-family:'Bebas Neue',sans-serif; font-size:18px; letter-spacing:0.5px; cursor:pointer; color:white; transition:all 0.2s; margin-top:4px; background:var(--primary); }
+.btn-gerar:hover { filter:brightness(1.1); transform:translateY(-1px); }
+.btn-gerar:disabled { background:var(--border); color:var(--muted); transform:none; cursor:not-allowed; }
+.spinner { display:none; text-align:center; padding:10px; font-size:13px; color:var(--muted); }
+.spin { display:inline-block; animation:rot 1s linear infinite; }
+@keyframes rot { to{transform:rotate(360deg)} }
+.link-card { border-radius:12px; padding:14px; margin-bottom:12px; border:1.5px solid; }
+.link-card.motoboy { background:#FFF8F0; border-color:#F0D4A0; }
+.link-card.cliente  { background:#EDF7F2; border-color:#A8D8BC; }
+.link-card-head { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
+.link-card-head .ic { font-size:18px; }
+.link-card-head .tt { font-size:13px; font-weight:700; color:var(--ink); }
+.link-card-head .dd { font-size:11px; color:var(--muted); }
+.link-url { font-size:12px; color:var(--ink); word-break:break-all; background:white; border-radius:8px; padding:8px 10px; border:1px solid var(--border); margin-bottom:8px; font-family:monospace; }
+.btn-copy { width:100%; padding:8px; border:none; border-radius:8px; font-size:12px; font-weight:600; cursor:pointer; font-family:'Plus Jakarta Sans',sans-serif; }
+.btn-copy.m { background:var(--primary); color:white; }
+.btn-copy.c { background:var(--green); color:white; }
+.btn-novo { width:100%; padding:12px; border:1.5px solid var(--border); border-radius:10px; background:transparent; color:var(--muted); font-family:'Bebas Neue',sans-serif; font-size:16px; cursor:pointer; transition:all 0.2s; }
+.btn-novo:hover { border-color:var(--primary); color:var(--primary); }
+.erro { background:#FEF0EE; border:1px solid #F5C2BB; border-radius:8px; padding:10px 14px; font-size:12px; color:var(--red); margin-top:8px; display:none; }
+.loading-screen { text-align:center; padding:32px 0; color:var(--muted); }
+.error-screen { text-align:center; padding:24px 0; }
+.error-screen h3 { font-family:'Bebas Neue',sans-serif; font-size:22px; color:var(--ink); margin-bottom:6px; }
+.error-screen p { font-size:13px; color:var(--muted); line-height:1.5; }
+.error-screen a { color:var(--primary); text-decoration:none; font-weight:600; }
+
+/* Modal upgrade */
+.modal-overlay { position:fixed; inset:0; background:rgba(10,10,15,0.85); z-index:9999; display:none; align-items:center; justify-content:center; padding:24px; backdrop-filter:blur(6px); }
+.modal-overlay.show { display:flex; }
+.modal-box { background:var(--paper); border-radius:24px; padding:36px 28px; max-width:360px; width:100%; text-align:center; animation:mIn 0.3s ease; }
+@keyframes mIn { from{transform:scale(0.9);opacity:0} to{transform:scale(1);opacity:1} }
+.modal-box .ic { font-size:48px; margin-bottom:14px; }
+.modal-box h3 { font-family:'Bebas Neue',sans-serif; font-size:26px; color:var(--ink); margin-bottom:6px; }
+.modal-box p { font-size:13px; color:var(--muted); line-height:1.6; margin-bottom:20px; }
+.modal-price { font-family:'Bebas Neue',sans-serif; font-size:48px; color:var(--ink); line-height:1; margin-bottom:4px; }
+.modal-price span { font-size:20px; }
+.modal-period { font-size:12px; color:var(--muted); margin-bottom:24px; }
+.modal-features { text-align:left; background:#F0EDE8; border-radius:12px; padding:16px; margin-bottom:24px; }
+.modal-features li { font-size:13px; color:var(--ink); list-style:none; padding:4px 0; }
+.modal-features li::before { content:'✅ '; }
+.btn-pagar { width:100%; padding:16px; background:#009EE3; color:white; border:none; border-radius:14px; font-family:'Bebas Neue',sans-serif; font-size:18px; cursor:pointer; transition:all 0.2s; margin-bottom:10px; display:flex; align-items:center; justify-content:center; gap:8px; }
+.btn-pagar:hover { background:#0080C0; transform:translateY(-1px); }
+.btn-pagar:disabled { background:var(--border); color:var(--muted); transform:none; cursor:not-allowed; }
+.btn-fechar { width:100%; padding:12px; background:transparent; color:var(--muted); border:1.5px solid var(--border); border-radius:12px; font-family:'Plus Jakarta Sans',sans-serif; font-size:14px; cursor:pointer; }
+.mp-logo { font-size:11px; color:var(--muted); margin-top:12px; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="loading-screen" id="loadingScreen"><div class="spin" style="font-size:28px">⏳</div><br><span style="font-size:13px;margin-top:8px;display:block">Carregando…</span></div>
+  <div class="error-screen" id="errorScreen" style="display:none">
+    <div style="font-size:40px;margin-bottom:12px">🔗</div>
+    <h3>Loja não encontrada</h3>
+    <p><a href="index.html">← Cadastrar minha loja</a></p>
+  </div>
+  <div id="painelSection" style="display:none">
+    <div class="logo-area">
+      <span class="loja-icon" id="lojaIcon">🏪</span>
+      <div class="loja-nome" id="lojaNome">–</div>
+      <div class="loja-sub">Painel de Entregas</div>
+      <a class="powered" href="index.html">Powered by <span>RastreiaJá</span></a>
+    </div>
+
+    <!-- Banner plano -->
+    <div class="plano-banner free" id="planoBanner">
+      <div class="plano-info">
+        <div class="plano-label">Plano atual</div>
+        <div class="plano-valor" id="planoValor">Gratuito — com anúncios</div>
+      </div>
+      <button class="btn-upgrade" id="btnUpgrade">⭐ Remover anúncios</button>
+    </div>
+
+    <!-- Anúncio (some no premium) -->
+    <div class="ad-strip" id="adStrip">
+      <!-- Cole aqui seu código AdSense -->
+      <div class="ad-placeholder">Publicidade · 300×70</div>
+    </div>
+
+    <div id="formSection">
+      <div class="section-title">Endereço da loja</div>
+      <div class="loja-row">
+        <input type="text" id="endLoja" readonly>
+        <button class="btn-edit" id="btnEdit">✏️</button>
+      </div>
+      <div class="section-title">Nova entrega</div>
+      <label>ID do Pedido</label>
+      <input type="text" id="pedidoId" placeholder="Ex: 042" maxlength="20">
+      <label>Endereço do Cliente</label>
+      <input type="text" id="endCliente" placeholder="Rua, número, cidade">
+      <div class="spinner" id="spinner"><span class="spin">⏳</span> Calculando rota…</div>
+      <div class="erro" id="erroForm"></div>
+      <button class="btn-gerar" id="btnGerar">GERAR LINKS →</button>
+    </div>
+
+    <div id="linksSection" style="display:none">
+      <div class="section-title">Links gerados — Pedido <span id="pedidoLabel"></span></div>
+      <div class="link-card motoboy">
+        <div class="link-card-head"><span class="ic">🛵</span><div><div class="tt">Link do Motoboy</div><div class="dd">Envie pelo WhatsApp ao entregador</div></div></div>
+        <div class="link-url" id="linkMotoboy">–</div>
+        <button class="btn-copy m" id="btnCopyM">📋 Copiar link do motoboy</button>
+      </div>
+      <div class="link-card cliente">
+        <div class="link-card-head"><span class="ic">📱</span><div><div class="tt">Link do Cliente</div><div class="dd">Envie pelo WhatsApp ao cliente</div></div></div>
+        <div class="link-url" id="linkCliente">–</div>
+        <button class="btn-copy c" id="btnCopyC">📋 Copiar link do cliente</button>
+      </div>
+      <button class="btn-novo" id="btnNovo">+ NOVA ENTREGA</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal upgrade -->
+<div class="modal-overlay" id="modalUpgrade">
+  <div class="modal-box">
+    <div class="ic">⭐</div>
+    <h3>RastreiaJá Premium</h3>
+    <p>Remova os anúncios e tenha um painel mais limpo e profissional.</p>
+    <div class="modal-price"><span>R$</span> 9,90</div>
+    <div class="modal-period">por mês · cancele quando quiser</div>
+    <ul class="modal-features">
+      <li>Painel 100% sem anúncios</li>
+      <li>Válido por 30 dias</li>
+      <li>PIX, cartão de crédito e débito</li>
+      <li>Ativação automática após pagamento</li>
+    </ul>
+    <button class="btn-pagar" id="btnPagar">
+      <img src="https://www.mercadopago.com/org-img/MP3/home/logomp.png" height="18" alt="MP"> Pagar com Mercado Pago
+    </button>
+    <button class="btn-fechar" id="btnFecharModal">Agora não</button>
+    <div class="mp-logo">Pagamento 100% seguro via Mercado Pago</div>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+  const DB_URL = 'https://rastreia-pedido-default-rtdb.firebaseio.com';
+  const params = new URLSearchParams(window.location.search);
+  const slug   = params.get('loja');
+
+  function showError() { document.getElementById('loadingScreen').style.display='none'; document.getElementById('errorScreen').style.display='block'; }
+
+  if (!slug) { showError(); } else {
+    const app = initializeApp({ databaseURL: DB_URL }, 'loja-' + Date.now());
+    const db  = getDatabase(app);
+    const snap = await get(ref(db, `lojas/${slug}`));
+    if (!snap.exists()) { showError(); } else {
+      const loja = snap.val();
+      const cor  = loja.cor || '#C8832A';
+      const orsKey = loja.orsKey;
+      document.documentElement.style.setProperty('--primary', cor);
+      document.getElementById('lojaIcon').textContent = loja.segmento || '🏪';
+      document.getElementById('lojaNome').textContent = loja.nome;
+      document.getElementById('endLoja').value = loja.endereco;
+      document.getElementById('loadingScreen').style.display = 'none';
+      document.getElementById('painelSection').style.display = 'block';
+
+      // ── Verifica plano ──────────────────────────────
+      const plano = loja.plano;
+      let isPremium = false;
+      if (plano && plano.ativo) {
+        const expira = new Date(plano.expiraEm);
+        if (expira > new Date()) {
+          isPremium = true;
+          // Esconde anúncio e atualiza banner
+          document.getElementById('adStrip').classList.add('hidden');
+          document.getElementById('planoBanner').className = 'plano-banner premium';
+          document.getElementById('planoValor').textContent = `⭐ Premium — válido até ${expira.toLocaleDateString('pt-BR')}`;
+          document.getElementById('btnUpgrade').textContent = '✅ Ativo';
+          document.getElementById('btnUpgrade').disabled = true;
+        }
+      }
+
+      // ── Notificação de pagamento aprovado ───────────
+      const statusUrl = params.get('status');
+      if (statusUrl === 'approved' && !isPremium) {
+        // Recarrega dados (pode ter sido ativado em sucesso.html)
+        const snapFresh = await get(ref(db, `lojas/${slug}/plano`));
+        if (snapFresh.exists() && snapFresh.val().ativo) {
+          document.getElementById('adStrip').classList.add('hidden');
+          document.getElementById('planoBanner').className = 'plano-banner premium';
+          const exp = new Date(snapFresh.val().expiraEm);
+          document.getElementById('planoValor').textContent = `⭐ Premium — válido até ${exp.toLocaleDateString('pt-BR')}`;
+          document.getElementById('btnUpgrade').textContent = '✅ Ativo';
+          document.getElementById('btnUpgrade').disabled = true;
+        }
+      }
+
+      // ── Editar endereço ─────────────────────────────
+      let editando = false;
+      document.getElementById('btnEdit').addEventListener('click', () => {
+        const input = document.getElementById('endLoja');
+        const btn   = document.getElementById('btnEdit');
+        if (!editando) { input.readOnly=false; input.focus(); btn.textContent='💾'; editando=true; }
+        else { input.readOnly=true; btn.textContent='✏️'; editando=false; set(ref(db,`lojas/${slug}/endereco`), input.value); }
+      });
+
+      // ── Geocode ─────────────────────────────────────
+      async function geocode(end) {
+        const url = `https://api.openrouteservice.org/geocode/search?api_key=${orsKey}&text=${encodeURIComponent(end+', Brasil')}&boundary.country=BR&size=1`;
+        const r = await fetch(url); const d = await r.json();
+        if (!d.features||!d.features.length) throw new Error('Endereço não encontrado: "'+end+'"');
+        const [lng,lat]=d.features[0].geometry.coordinates; return {lat,lng};
+      }
+
+      // ── Gerar links ─────────────────────────────────
+      document.getElementById('btnGerar').addEventListener('click', async () => {
+        const id   = document.getElementById('pedidoId').value.trim().replace(/[^a-zA-Z0-9_-]/g,'');
+        const endL = document.getElementById('endLoja').value.trim();
+        const endC = document.getElementById('endCliente').value.trim();
+        const erro = document.getElementById('erroForm');
+        const btn  = document.getElementById('btnGerar');
+        erro.style.display='none';
+        if (!id)  { erro.textContent='⚠️ Preencha o ID do pedido.'; erro.style.display='block'; return; }
+        if (!endC){ erro.textContent='⚠️ Preencha o endereço do cliente.'; erro.style.display='block'; return; }
+        btn.disabled=true; document.getElementById('spinner').style.display='block';
+        try {
+          const [cL,cC]=await Promise.all([geocode(endL),geocode(endC)]);
+          const codigo = `${slug}-${id}`;
+          const base   = window.location.origin + window.location.pathname.replace('loja.html','');
+          await set(ref(db,`links/${codigo}`),{
+            pedido:`pedido_${id}`, db:DB_URL,
+            latL:cL.lat.toFixed(6), lngL:cL.lng.toFixed(6),
+            latC:cC.lat.toFixed(6), lngC:cC.lng.toFixed(6),
+            ors:orsKey, loja:slug, nomeLoja:loja.nome, corLoja:cor, segLoja:loja.segmento,
+            criadoEm:new Date().toISOString()
+          });
+          document.getElementById('linkMotoboy').textContent=`${base}motoboy.html?c=${codigo}`;
+          document.getElementById('linkCliente').textContent=`${base}rastrear.html?c=${codigo}`;
+          document.getElementById('pedidoLabel').textContent='#'+id;
+          document.getElementById('formSection').style.display='none';
+          document.getElementById('linksSection').style.display='block';
+        } catch(e) { erro.textContent='⚠️ '+e.message; erro.style.display='block'; }
+        finally { document.getElementById('spinner').style.display='none'; btn.disabled=false; }
+      });
+
+      function setupCopy(btnId,srcId) {
+        document.getElementById(btnId).addEventListener('click',function(){
+          navigator.clipboard.writeText(document.getElementById(srcId).textContent).then(()=>{
+            const o=this.textContent; this.textContent='✅ Copiado!';
+            setTimeout(()=>this.textContent=o,2000);
+          });
+        });
+      }
+      setupCopy('btnCopyM','linkMotoboy'); setupCopy('btnCopyC','linkCliente');
+      document.getElementById('btnNovo').addEventListener('click',()=>{
+        document.getElementById('pedidoId').value=''; document.getElementById('endCliente').value='';
+        document.getElementById('erroForm').style.display='none';
+        document.getElementById('linksSection').style.display='none';
+        document.getElementById('formSection').style.display='block';
+      });
+
+      // ── Modal upgrade ───────────────────────────────
+      document.getElementById('btnUpgrade').addEventListener('click',()=>{
+        document.getElementById('modalUpgrade').classList.add('show');
+      });
+      document.getElementById('btnFecharModal').addEventListener('click',()=>{
+        document.getElementById('modalUpgrade').classList.remove('show');
+      });
+
+      document.getElementById('btnPagar').addEventListener('click', async () => {
+        const btn = document.getElementById('btnPagar');
+        btn.disabled = true;
+        btn.textContent = '⏳ Gerando cobrança…';
+        try {
+          const res = await fetch('/.netlify/functions/criar-pagamento', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ slug, nomeLoja: loja.nome })
+          });
+          const data = await res.json();
+          if (data.init_point) {
+            window.location.href = data.init_point;
+          } else {
+            throw new Error(data.error || 'Erro ao gerar cobrança');
+          }
+        } catch(e) {
+          btn.disabled = false;
+          btn.innerHTML = '<img src="https://www.mercadopago.com/org-img/MP3/home/logomp.png" height="18" alt="MP"> Pagar com Mercado Pago';
+          alert('Erro: ' + e.message);
+        }
+      });
+    }
+  }
+</script>
+</body>
+</html>
