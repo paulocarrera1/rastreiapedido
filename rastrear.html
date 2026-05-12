@@ -225,5 +225,44 @@ body { background: var(--ink); height: 100dvh; display: flex; flex-direction: co
     }
   }
 </script>
+<!-- BANNER DE COOKIES -->
+<div id="cookieBanner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;padding:16px 20px;background:#0A0A0F;border-top:3px solid #C8F000;box-shadow:0 -8px 32px rgba(0,0,0,0.4);">
+  <div style="max-width:900px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+    <div style="flex:1;min-width:240px;">
+      <p style="font-family:'Bebas Neue',sans-serif;font-size:16px;color:#F7F5F0;margin-bottom:4px;">Usamos cookies</p>
+      <p style="font-size:12px;color:rgba(247,245,240,0.6);line-height:1.5;margin:0;">
+        Cookies essenciais e, com sua autorização, analíticos e de publicidade.
+        <a href="politicas.html" style="color:#C8F000;text-decoration:none;font-weight:600;">Saiba mais</a>
+      </p>
+    </div>
+    <div style="display:flex;gap:8px;flex-shrink:0;">
+      <button onclick="recusarCookies()" style="padding:8px 16px;background:transparent;color:rgba(247,245,240,0.6);border:1px solid rgba(247,245,240,0.2);border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:sans-serif;">
+        Somente essenciais
+      </button>
+      <button onclick="aceitarCookies()" style="padding:8px 16px;background:#C8F000;color:#0A0A0F;border:none;border-radius:8px;font-size:12px;font-weight:800;cursor:pointer;font-family:sans-serif;">
+        Aceitar todos
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function mostrarBannerSeNecessario() {
+    if (!localStorage.getItem('rp_cookie_consent')) {
+      document.getElementById('cookieBanner').style.display = 'block';
+    }
+  }
+  function aceitarCookies() {
+    localStorage.setItem('rp_cookie_consent', 'all');
+    localStorage.setItem('rp_cookie_date', new Date().toISOString());
+    document.getElementById('cookieBanner').style.display = 'none';
+  }
+  function recusarCookies() {
+    localStorage.setItem('rp_cookie_consent', 'essential');
+    localStorage.setItem('rp_cookie_date', new Date().toISOString());
+    document.getElementById('cookieBanner').style.display = 'none';
+  }
+  setTimeout(mostrarBannerSeNecessario, 500);
+</script>
 </body>
 </html>

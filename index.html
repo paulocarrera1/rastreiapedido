@@ -219,6 +219,27 @@ footer a { color:var(--acid); text-decoration:none; }
   </div>
 </section>
 
+<!-- BANNER DE COOKIES -->
+<div id="cookieBanner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;padding:20px 24px;background:#0A0A0F;border-top:3px solid #C8F000;box-shadow:0 -8px 32px rgba(0,0,0,0.4);">
+  <div style="max-width:900px;margin:0 auto;display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
+    <div style="flex:1;min-width:280px;">
+      <p style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:#F7F5F0;margin-bottom:6px;letter-spacing:0.3px;">Usamos cookies</p>
+      <p style="font-size:13px;color:rgba(247,245,240,0.6);line-height:1.6;margin:0;">
+        Utilizamos cookies essenciais para o funcionamento do site e, com sua autorização, cookies analíticos e de publicidade.
+        Consulte nossa <a href="politicas.html" style="color:#C8F000;text-decoration:none;font-weight:600;">Política de Cookies</a>.
+      </p>
+    </div>
+    <div style="display:flex;gap:10px;flex-shrink:0;flex-wrap:wrap;">
+      <button onclick="recusarCookies()" style="padding:10px 20px;background:transparent;color:rgba(247,245,240,0.6);border:1px solid rgba(247,245,240,0.2);border-radius:8px;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;">
+        Somente essenciais
+      </button>
+      <button onclick="aceitarCookies()" style="padding:10px 20px;background:#C8F000;color:#0A0A0F;border:none;border-radius:8px;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:800;cursor:pointer;">
+        Aceitar todos
+      </button>
+    </div>
+  </div>
+</div>
+
 <footer>
   <p>RastreiaPedido © 2026 — Sistema gratuito de rastreamento de entregas</p>
   <p style="margin-top:8px;">Feito com ❤️ para pequenos negócios brasileiros</p>
@@ -277,6 +298,32 @@ footer a { color:var(--acid); text-decoration:none; }
       setTimeout(()=>btn.textContent='📋 Copiar link do painel', 2000);
     });
   });
+</script>
+
+<script>
+  // Banner de cookies
+  function mostrarBannerSeNecessario() {
+    const consent = localStorage.getItem('rp_cookie_consent');
+    if (!consent) {
+      document.getElementById('cookieBanner').style.display = 'block';
+    }
+  }
+
+  function aceitarCookies() {
+    localStorage.setItem('rp_cookie_consent', 'all');
+    localStorage.setItem('rp_cookie_date', new Date().toISOString());
+    document.getElementById('cookieBanner').style.display = 'none';
+    // Aqui você ativaria Google Analytics e AdSense se quiser
+  }
+
+  function recusarCookies() {
+    localStorage.setItem('rp_cookie_consent', 'essential');
+    localStorage.setItem('rp_cookie_date', new Date().toISOString());
+    document.getElementById('cookieBanner').style.display = 'none';
+  }
+
+  // Exibe o banner após 500ms para não travar o carregamento
+  setTimeout(mostrarBannerSeNecessario, 500);
 </script>
 </body>
 </html>
