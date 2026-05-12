@@ -14,7 +14,7 @@
 html { scroll-behavior:smooth; }
 body { font-family:'Plus Jakarta Sans',sans-serif; background:var(--paper); color:var(--ink); overflow-x:hidden; }
 
-.header { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; align-items:center; justify-content:space-between; padding:12px 40px; background:rgba(247,245,240,0.95); backdrop-filter:blur(16px); border-bottom:1px solid var(--border); min-height:90px; }
+.header { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; align-items:center; justify-content:space-between; padding:12px 40px; background:rgba(247,245,240,0.95); backdrop-filter:blur(16px); border-bottom:1px solid var(--border); min-height:90px; overflow:visible; }
 .logo { text-decoration:none; display:flex; align-items:center; }
 .logo span { color:var(--accent); }
 .header-cta { background:var(--ink); color:var(--paper); padding:10px 24px; border-radius:100px; font-size:14px; font-weight:600; text-decoration:none; transition:all 0.2s; }
@@ -117,7 +117,7 @@ footer a { color:var(--acid); text-decoration:none; }
 
 <header class="header">
   <a class="logo" href="#" style="display:flex;align-items:center;">
-    <img src="logo.svg" alt="RastreiaPedido" style="display:block;width:200px;height:auto;">
+    <img src="logo.svg" alt="RastreiaPedido" style="display:block;width:220px;height:auto;overflow:visible;">
   </a
   <a class="header-cta" href="#cadastro">Cadastrar minha loja</a>
 </header>
