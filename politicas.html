@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Políticas e Termos – RastreiaPedido</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+:root { --ink:#0A0A0F; --paper:#F7F5F0; --accent:#FF4D1C; --acid:#C8F000; --muted:#6B6B7B; --border:#E2E0DA; --card:#FFFFFF; }
+html { scroll-behavior:smooth; }
+body { font-family:'Plus Jakarta Sans',sans-serif; background:var(--paper); color:var(--ink); }
+
+/* HEADER */
+.header { background:var(--ink); padding:20px 40px; display:flex; align-items:center; justify-content:space-between; }
+.logo { font-family:'Bebas Neue',sans-serif; font-size:28px; color:var(--paper); text-decoration:none; letter-spacing:1px; }
+.logo span { color:var(--accent); }
+.header-back { color:rgba(247,245,240,0.5); font-size:13px; text-decoration:none; transition:color 0.2s; }
+.header-back:hover { color:var(--acid); }
+
+/* HERO */
+.hero { background:var(--ink); padding:60px 40px 80px; position:relative; overflow:hidden; }
+.hero::after { content:''; position:absolute; bottom:0; left:0; right:0; height:60px; background:var(--paper); border-radius:60px 60px 0 0; }
+.hero-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:var(--acid); margin-bottom:16px; }
+.hero h1 { font-family:'Bebas Neue',sans-serif; font-size:clamp(48px,8vw,100px); line-height:0.92; color:var(--paper); max-width:700px; }
+.hero h1 span { color:var(--accent); }
+.hero-meta { margin-top:24px; font-size:13px; color:rgba(247,245,240,0.4); }
+
+/* TABS */
+.tabs-wrapper { position:sticky; top:0; z-index:100; background:var(--paper); border-bottom:2px solid var(--border); }
+.tabs { display:flex; padding:0 40px; gap:0; max-width:900px; margin:0 auto; }
+.tab {
+  padding:18px 24px; font-size:14px; font-weight:600; cursor:pointer;
+  border-bottom:3px solid transparent; margin-bottom:-2px;
+  color:var(--muted); transition:all 0.2s; background:none; border-top:none; border-left:none; border-right:none;
+  font-family:'Plus Jakarta Sans',sans-serif; white-space:nowrap;
+}
+.tab:hover { color:var(--ink); }
+.tab.active { color:var(--ink); border-bottom-color:var(--accent); }
+
+/* CONTEÚDO */
+.content { max-width:900px; margin:0 auto; padding:60px 40px 100px; }
+.doc-section { display:none; }
+.doc-section.active { display:block; }
+
+/* TIPOGRAFIA */
+.doc-title { font-family:'Bebas Neue',sans-serif; font-size:48px; color:var(--ink); margin-bottom:8px; }
+.doc-date { font-size:12px; color:var(--muted); margin-bottom:48px; padding-bottom:24px; border-bottom:1px solid var(--border); }
+.doc-date strong { color:var(--accent); }
+
+h2 {
+  font-family:'Bebas Neue',sans-serif; font-size:28px; color:var(--ink);
+  margin-top:48px; margin-bottom:16px; padding-top:16px;
+  border-top:1px solid var(--border);
+}
+h2:first-of-type { margin-top:0; border-top:none; padding-top:0; }
+h3 { font-size:16px; font-weight:700; color:var(--ink); margin-top:24px; margin-bottom:10px; }
+p { font-size:15px; line-height:1.8; color:#2a2a2a; margin-bottom:16px; }
+ul, ol { padding-left:24px; margin-bottom:16px; }
+li { font-size:15px; line-height:1.8; color:#2a2a2a; margin-bottom:6px; }
+strong { color:var(--ink); }
+a { color:var(--accent); text-decoration:none; }
+a:hover { text-decoration:underline; }
+
+/* DESTAQUE */
+.highlight {
+  background:var(--card); border:1.5px solid var(--border);
+  border-radius:16px; padding:24px 28px; margin:24px 0;
+}
+.highlight.warning { border-color:#F5C2BB; background:#FEF0EE; }
+.highlight.info    { border-color:#A8D8BC; background:#EDF7F2; }
+.highlight.neutral { border-color:var(--border); background:#F5F3EE; }
+.highlight-title { font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:10px; }
+.highlight.warning .highlight-title { color:var(--accent); }
+.highlight.info    .highlight-title { color:#2D7A4F; }
+.highlight.neutral .highlight-title { color:var(--muted); }
+.highlight p { margin-bottom:0; font-size:14px; }
+
+/* TABELA */
+table { width:100%; border-collapse:collapse; margin:24px 0; font-size:14px; }
+th { background:var(--ink); color:var(--paper); padding:12px 16px; text-align:left; font-weight:600; }
+th:first-child { border-radius:8px 0 0 0; }
+th:last-child  { border-radius:0 8px 0 0; }
+td { padding:12px 16px; border-bottom:1px solid var(--border); vertical-align:top; line-height:1.6; }
+tr:nth-child(even) td { background:#F9F7F4; }
+tr:last-child td { border-bottom:none; }
+
+/* CONTATO */
+.contact-box {
+  background:var(--ink); color:var(--paper); border-radius:20px;
+  padding:32px; margin-top:48px; display:flex; gap:24px; align-items:center; flex-wrap:wrap;
+}
+.contact-box .icon { font-size:40px; flex-shrink:0; }
+.contact-box h3 { font-family:'Bebas Neue',sans-serif; font-size:24px; color:var(--paper); margin-bottom:6px; }
+.contact-box p { font-size:13px; color:rgba(247,245,240,0.6); margin-bottom:0; }
+.contact-box a { color:var(--acid); }
+
+/* FOOTER */
+footer { background:var(--ink); padding:32px 40px; text-align:center; font-size:12px; color:rgba(247,245,240,0.3); }
+footer a { color:var(--acid); text-decoration:none; }
+
+/* ÍNDICE */
+.toc { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:24px; margin-bottom:40px; }
+.toc-title { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--muted); margin-bottom:14px; }
+.toc ol { padding-left:20px; margin:0; }
+.toc li { font-size:14px; line-height:2; margin:0; }
+.toc a { color:var(--ink); font-weight:500; }
+.toc a:hover { color:var(--accent); text-decoration:none; }
+
+/* BADGE */
+.badge { display:inline-flex; align-items:center; gap:6px; background:var(--acid); color:var(--ink); padding:4px 12px; border-radius:100px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:16px; }
+
+@media(max-width:768px) {
+  .header { padding:16px 20px; }
+  .hero { padding:40px 20px 60px; }
+  .tabs { padding:0 12px; gap:0; overflow-x:auto; }
+  .tab { padding:16px 16px; font-size:13px; }
+  .content { padding:40px 20px 80px; }
+  .contact-box { flex-direction:column; }
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <a class="logo" href="index.html">Rastreia<span>Pedido</span></a>
+  <a class="header-back" href="index.html">← Voltar ao início</a>
+</header>
+
+<div class="hero">
+  <div class="hero-label">Documentos Legais</div>
+  <h1>POLÍTICAS<br><span>&</span> TERMOS</h1>
+  <div class="hero-meta">Última atualização: maio de 2026 · Versão 1.0</div>
+</div>
+
+<!-- ABAS -->
+<div class="tabs-wrapper">
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('privacidade')">🔒 Privacidade</button>
+    <button class="tab" onclick="showTab('termos')">📋 Termos de Uso</button>
+    <button class="tab" onclick="showTab('cookies')">🍪 Cookies</button>
+  </div>
+</div>
+
+<div class="content">
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!-- POLÍTICA DE PRIVACIDADE                        -->
+  <!-- ══════════════════════════════════════════════ -->
+  <div class="doc-section active" id="privacidade">
+    <div class="badge">LGPD — Lei 13.709/2018</div>
+    <div class="doc-title">Política de Privacidade</div>
+    <div class="doc-date">Vigente desde <strong>12 de maio de 2026</strong> · RastreiaPedido</div>
+
+    <div class="toc">
+      <div class="toc-title">Índice</div>
+      <ol>
+        <li><a href="#p1">Quem somos</a></li>
+        <li><a href="#p2">Dados que coletamos</a></li>
+        <li><a href="#p3">Dados de endereço — proteção especial</a></li>
+        <li><a href="#p4">Como usamos seus dados</a></li>
+        <li><a href="#p5">Base legal do tratamento</a></li>
+        <li><a href="#p6">Compartilhamento de dados</a></li>
+        <li><a href="#p7">Retenção e exclusão</a></li>
+        <li><a href="#p8">Segurança</a></li>
+        <li><a href="#p9">Seus direitos (LGPD)</a></li>
+        <li><a href="#p10">Encarregado de Dados (DPO)</a></li>
+        <li><a href="#p11">Alterações desta política</a></li>
+      </ol>
+    </div>
+
+    <h2 id="p1">1. Quem somos</h2>
+    <p>O <strong>RastreiaPedido</strong> é um sistema de rastreamento de entregas em tempo real, acessível em <a href="https://rastreiapedido.com.br">rastreiapedido.com.br</a>. Operado como plataforma digital de uso gratuito para estabelecimentos comerciais brasileiros.</p>
+    <p>Para fins desta política, o RastreiaPedido atua como <strong>controlador de dados</strong> nos termos do art. 5º, VI da Lei Geral de Proteção de Dados (LGPD — Lei 13.709/2018).</p>
+
+    <h2 id="p2">2. Dados que coletamos</h2>
+    <p>Coletamos apenas os dados estritamente necessários para o funcionamento do serviço:</p>
+
+    <table>
+      <tr><th>Dado</th><th>Quem fornece</th><th>Finalidade</th></tr>
+      <tr><td>Nome do estabelecimento</td><td>Estabelecimento</td><td>Identificação no painel</td></tr>
+      <tr><td>Endereço da loja</td><td>Estabelecimento</td><td>Ponto de origem da rota</td></tr>
+      <tr><td>Endereço do cliente</td><td>Estabelecimento</td><td>Ponto de destino da rota</td></tr>
+      <tr><td>Localização GPS do motoboy</td><td>Motoboy (celular)</td><td>Rastreio em tempo real</td></tr>
+      <tr><td>Dados de pagamento</td><td>Titular do plano pago</td><td>Processamento via nossa plataforma de pagamentos</td></tr>
+      <tr><td>Dados de navegação (cookies)</td><td>Automático</td><td>Funcionamento e analytics</td></tr>
+    </table>
+
+    <div class="highlight neutral">
+      <div class="highlight-title">📌 Princípio da minimização</div>
+      <p>Não coletamos nome, CPF, telefone ou qualquer outro dado pessoal do cliente final. O único dado do destinatário tratado é o <strong>endereço de entrega</strong>, fornecido pelo estabelecimento.</p>
+    </div>
+
+    <h2 id="p3">3. Dados de endereço — proteção especial</h2>
+    <p>O endereço de entrega do cliente é um dado sensível sob a perspectiva de segurança física e privacidade. Por isso, adotamos as seguintes medidas específicas:</p>
+
+    <h3>3.1 Armazenamento</h3>
+    <ul>
+      <li>Os endereços são convertidos em <strong>coordenadas geográficas (latitude/longitude)</strong> no momento da geração do link, por meio da API nosso serviço de geocodificação e rotas.</li>
+      <li>O endereço textual original <strong>não é armazenado</strong> em nenhum banco de dados — apenas as coordenadas são salvas no plataforma de banco de dados em nuvem.</li>
+      <li>As coordenadas ficam associadas a um código de entrega aleatório (ex: <code>loja-042</code>), sem vínculo com nome ou identidade do cliente.</li>
+    </ul>
+
+    <h3>3.2 Acesso</h3>
+    <ul>
+      <li>As coordenadas do destino são acessíveis apenas por quem possui o link de rastreio gerado para aquela entrega específica.</li>
+      <li>Não há painel administrativo que liste endereços de clientes — cada link é único e isolado.</li>
+      <li>Os entregadores (motoboys) <strong>não têm acesso</strong> ao endereço de destino — apenas visualizam a rota no mapa.</li>
+    </ul>
+
+    <h3>3.3 Tempo de retenção</h3>
+    <ul>
+      <li>Os dados de cada entrega (coordenadas, posição GPS, status) são automaticamente <strong>sobrescritos na próxima entrega</strong> com o mesmo código de pedido.</li>
+      <li>Não mantemos histórico de entregas anteriores.</li>
+    </ul>
+
+    <div class="highlight warning">
+      <div class="highlight-title">⚠️ Responsabilidade do estabelecimento</div>
+      <p>O estabelecimento é responsável por obter o consentimento do cliente para uso do endereço no sistema de rastreio e por não inserir dados pessoais adicionais além do endereço de entrega.</p>
+    </div>
+
+    <h2 id="p4">4. Como usamos seus dados</h2>
+    <p>Utilizamos os dados coletados exclusivamente para:</p>
+    <ul>
+      <li>Gerar e exibir a rota de entrega no mapa;</li>
+      <li>Transmitir a localização do motoboy em tempo real ao cliente;</li>
+      <li>Personalizar o painel com a identidade visual do estabelecimento;</li>
+      <li>Processar pagamentos do plano premium;</li>
+      <li>Melhorar o desempenho e a experiência do sistema;</li>
+      <li>Cumprir obrigações legais aplicáveis.</li>
+    </ul>
+    <p><strong>Não utilizamos seus dados para:</strong> publicidade comportamental, venda a terceiros, criação de perfis ou qualquer finalidade incompatível com as descritas acima.</p>
+
+    <h2 id="p5">5. Base legal do tratamento</h2>
+    <table>
+      <tr><th>Dado tratado</th><th>Base legal (LGPD)</th></tr>
+      <tr><td>Dados do estabelecimento</td><td>Execução de contrato — art. 7º, V</td></tr>
+      <tr><td>Endereço do cliente (coordenadas)</td><td>Legítimo interesse — art. 7º, IX</td></tr>
+      <tr><td>Localização GPS do motoboy</td><td>Consentimento — art. 7º, I</td></tr>
+      <tr><td>Dados de pagamento</td><td>Execução de contrato — art. 7º, V</td></tr>
+      <tr><td>Cookies essenciais</td><td>Legítimo interesse — art. 7º, IX</td></tr>
+      <tr><td>Cookies de analytics</td><td>Consentimento — art. 7º, I</td></tr>
+    </table>
+
+    <h2 id="p6">6. Compartilhamento de dados</h2>
+    <p>Compartilhamos dados apenas com os seguintes fornecedores, na medida estritamente necessária:</p>
+    <ul>
+      <li><strong>nossa plataforma de banco de dados em nuvem:</strong> armazenamento em tempo real das coordenadas de entrega e dados do estabelecimento. Servidores nos EUA com cláusulas contratuais padrão (SCCs) para transferência internacional.</li>
+      <li><strong>nosso serviço de geocodificação e cálculo de rotas:</strong> geocodificação de endereços e cálculo de rotas. Os endereços são enviados apenas no momento da geração do link e não são retidos pela plataforma.</li>
+      <li><strong>nossa plataforma de pagamentos:</strong> processamento de pagamentos do plano premium. Sujeito à política de privacidade própria da plataforma.</li>
+      <li><strong>nossa plataforma de publicidade:</strong> veiculação de anúncios na versão gratuita. Pode utilizar cookies para personalização — veja nossa Política de Cookies.</li>
+      <li><strong>nosso provedor de hospedagem:</strong> hospedagem do sistema. Acesso aos logs de servidor para fins de segurança e diagnóstico.</li>
+    </ul>
+    <p>Não vendemos, alugamos ou cedemos dados pessoais a terceiros para fins comerciais.</p>
+
+    <h2 id="p7">7. Retenção e exclusão</h2>
+    <ul>
+      <li><strong>Dados de entrega (coordenadas GPS):</strong> sobrescritos a cada nova entrega com o mesmo código. Sem histórico.</li>
+      <li><strong>Dados do estabelecimento:</strong> mantidos enquanto a conta estiver ativa. Excluídos mediante solicitação.</li>
+      <li><strong>Dados de pagamento:</strong> retidos pelo nossa plataforma de pagamentos conforme sua política e obrigações fiscais.</li>
+      <li><strong>Logs de servidor:</strong> retidos por até 90 dias pelo nosso provedor de hospedagem para fins de segurança.</li>
+    </ul>
+
+    <h2 id="p8">8. Segurança</h2>
+    <p>Adotamos medidas técnicas e organizacionais para proteger os dados:</p>
+    <ul>
+      <li>Comunicação criptografada via <strong>HTTPS/TLS</strong> em todas as páginas;</li>
+      <li>Acesso ao plataforma de banco de dados em nuvem protegido por <strong>regras de segurança</strong> por entrega;</li>
+      <li>Tokens de API armazenados como <strong>variáveis de ambiente</strong> seguras (nunca expostos no código-fonte público);</li>
+      <li>Links de rastreio com <strong>código único</strong> por entrega, sem enumeração sequencial previsível;</li>
+      <li>Dados de localização transmitidos apenas durante o período ativo da entrega.</li>
+    </ul>
+    <p>Em caso de incidente de segurança que possa afetar titulares, notificaremos a ANPD e os afetados nos prazos previstos pela LGPD.</p>
+
+    <h2 id="p9">9. Seus direitos (LGPD — art. 18)</h2>
+    <p>Como titular de dados pessoais, você tem os seguintes direitos:</p>
+    <ul>
+      <li><strong>Confirmação e acesso:</strong> saber se tratamos seus dados e obter cópia;</li>
+      <li><strong>Correção:</strong> solicitar correção de dados incompletos ou inexatos;</li>
+      <li><strong>Anonimização, bloqueio ou eliminação:</strong> de dados desnecessários ou tratados em desconformidade;</li>
+      <li><strong>Portabilidade:</strong> receber seus dados em formato estruturado;</li>
+      <li><strong>Eliminação:</strong> solicitar a exclusão dos dados tratados com base em consentimento;</li>
+      <li><strong>Revogação do consentimento:</strong> a qualquer momento, sem prejudicar tratamentos anteriores;</li>
+      <li><strong>Oposição:</strong> opor-se a tratamentos realizados com base em legítimo interesse;</li>
+      <li><strong>Informação:</strong> sobre entidades com as quais compartilhamos dados;</li>
+      <li><strong>Revisão:</strong> de decisões tomadas exclusivamente por meios automatizados.</li>
+    </ul>
+    <p>Para exercer seus direitos, entre em contato pelo e-mail indicado na seção 10.</p>
+
+    <h2 id="p10">10. Encarregado de Dados (DPO)</h2>
+    <div class="highlight info">
+      <div class="highlight-title">📧 Contato do Encarregado</div>
+      <p>Para dúvidas, solicitações de titulares ou comunicações relacionadas à proteção de dados, entre em contato:<br><br>
+      <strong>E-mail:</strong> <a href="mailto:privacidade@rastreiapedido.com.br">privacidade@rastreiapedido.com.br</a><br>
+      <strong>Prazo de resposta:</strong> até 15 dias úteis, conforme art. 18, §5º da LGPD.</p>
+    </div>
+
+    <h2 id="p11">11. Alterações desta política</h2>
+    <p>Esta política pode ser atualizada periodicamente. Alterações relevantes serão comunicadas por meio de aviso destacado no site com antecedência mínima de 15 dias. A data de vigência sempre estará indicada no topo deste documento.</p>
+    <p>O uso continuado do serviço após as alterações constitui aceite da política revisada.</p>
+
+    <div class="contact-box">
+      <div class="icon">🔒</div>
+      <div>
+        <h3>Dúvidas sobre privacidade?</h3>
+        <p>Entre em contato com nosso encarregado de dados:<br>
+        <a href="mailto:privacidade@rastreiapedido.com.br">privacidade@rastreiapedido.com.br</a></p>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!-- TERMOS DE USO                                  -->
+  <!-- ══════════════════════════════════════════════ -->
+  <div class="doc-section" id="termos">
+    <div class="doc-title">Termos de Uso</div>
+    <div class="doc-date">Vigente desde <strong>12 de maio de 2026</strong> · RastreiaPedido</div>
+
+    <div class="toc">
+      <div class="toc-title">Índice</div>
+      <ol>
+        <li><a href="#t1">Aceitação dos termos</a></li>
+        <li><a href="#t2">Descrição do serviço</a></li>
+        <li><a href="#t3">Cadastro e conta</a></li>
+        <li><a href="#t4">Plano gratuito e plano premium</a></li>
+        <li><a href="#t5">Obrigações do estabelecimento</a></li>
+        <li><a href="#t6">Obrigações do motoboy</a></li>
+        <li><a href="#t7">Uso aceitável</a></li>
+        <li><a href="#t8">Propriedade intelectual</a></li>
+        <li><a href="#t9">Limitação de responsabilidade</a></li>
+        <li><a href="#t10">Suspensão e encerramento</a></li>
+        <li><a href="#t11">Legislação aplicável</a></li>
+      </ol>
+    </div>
+
+    <h2 id="t1">1. Aceitação dos termos</h2>
+    <p>Ao cadastrar seu estabelecimento ou utilizar qualquer funcionalidade do <strong>RastreiaPedido</strong> (rastreiapedido.com.br), você declara ter lido, compreendido e aceito integralmente estes Termos de Uso, bem como nossa Política de Privacidade e Política de Cookies.</p>
+    <p>Se você não concorda com qualquer disposição destes termos, não utilize o serviço.</p>
+
+    <h2 id="t2">2. Descrição do serviço</h2>
+    <p>O RastreiaPedido é uma plataforma digital que permite a estabelecimentos comerciais gerar links de rastreamento de entregas em tempo real, sem necessidade de instalação de aplicativo por parte do entregador ou do cliente final.</p>
+    <p>O serviço é disponibilizado <strong>"no estado em que se encontra"</strong>, podendo ser alterado, suspenso ou descontinuado a qualquer momento, mediante aviso prévio quando possível.</p>
+
+    <h2 id="t3">3. Cadastro e conta</h2>
+    <ul>
+      <li>O cadastro é gratuito e requer nome do estabelecimento, endereço e um identificador único (slug).</li>
+      <li>O estabelecimento é responsável por manter o link do painel em sigilo e por todos os usos realizados a partir dele.</li>
+      <li>É proibido cadastrar estabelecimentos fictícios, usar dados de terceiros sem autorização ou criar múltiplos cadastros para burlar limitações do sistema.</li>
+      <li>Reservamo-nos o direito de remover cadastros que violem estes termos.</li>
+    </ul>
+
+    <h2 id="t4">4. Plano gratuito e plano premium</h2>
+    <h3>4.1 Plano gratuito</h3>
+    <ul>
+      <li>Acesso completo às funcionalidades de rastreamento;</li>
+      <li>Exibição de anúncios do nossa plataforma de publicidade nas páginas do painel e do cliente;</li>
+      <li>Sem limite de entregas mensais.</li>
+    </ul>
+    <h3>4.2 Plano premium — R$ 9,90/mês</h3>
+    <ul>
+      <li>Remoção de todos os anúncios do painel e da página de rastreio do cliente;</li>
+      <li>Vigência de 30 dias corridos a partir da confirmação do pagamento;</li>
+      <li>Renovação manual — não há cobrança automática recorrente;</li>
+      <li>Pagamento processado pelo nossa plataforma de pagamentos (PIX e cartão de crédito/débito).</li>
+    </ul>
+    <div class="highlight warning">
+      <div class="highlight-title">⚠️ Política de reembolso</div>
+      <p>Não oferecemos reembolso para o plano premium após a ativação, uma vez que o benefício (remoção de anúncios) é disponibilizado imediatamente após o pagamento. Em caso de falha técnica comprovada, avalie sua situação pelo e-mail de contato.</p>
+    </div>
+
+    <h2 id="t5">5. Obrigações do estabelecimento</h2>
+    <p>Ao utilizar o RastreiaPedido, o estabelecimento compromete-se a:</p>
+    <ul>
+      <li>Informar ao cliente final que seu endereço de entrega será utilizado no sistema de rastreio;</li>
+      <li>Utilizar o sistema exclusivamente para rastreamento de entregas legítimas;</li>
+      <li>Não inserir dados pessoais desnecessários além do endereço de entrega;</li>
+      <li>Cumprir a LGPD na relação com seus clientes finais;</li>
+      <li>Não compartilhar os links de rastreio de forma indiscriminada ou pública;</li>
+      <li>Manter os dados cadastrais atualizados.</li>
+    </ul>
+
+    <h2 id="t6">6. Obrigações do motoboy</h2>
+    <p>O entregador que utilizar o link do motoboy compromete-se a:</p>
+    <ul>
+      <li>Permitir o acesso à localização GPS do dispositivo apenas durante a entrega ativa;</li>
+      <li>Encerrar o rastreio ao finalizar a entrega, utilizando o botão "Encerrar Entrega";</li>
+      <li>Não utilizar o sistema para fins diversos da entrega designada;</li>
+      <li>Manter a página aberta durante todo o percurso de entrega.</li>
+    </ul>
+
+    <h2 id="t7">7. Uso aceitável</h2>
+    <p>É expressamente <strong>proibido</strong>:</p>
+    <ul>
+      <li>Utilizar o sistema para rastrear pessoas sem seu conhecimento ou consentimento;</li>
+      <li>Realizar engenharia reversa, modificar ou distribuir o código do sistema;</li>
+      <li>Sobrecarregar os servidores com requisições automatizadas (bots, scrapers);</li>
+      <li>Utilizar o sistema para fins ilegais ou que violem direitos de terceiros;</li>
+      <li>Tentar acessar dados de entregas de outros estabelecimentos;</li>
+      <li>Contornar medidas de segurança do sistema.</li>
+    </ul>
+
+    <h2 id="t8">8. Propriedade intelectual</h2>
+    <p>Todo o conteúdo do RastreiaPedido — incluindo marca, design, código, textos e funcionalidades — é de propriedade exclusiva do operador da plataforma e protegido pela legislação brasileira de propriedade intelectual.</p>
+    <p>O uso do serviço não transfere ao usuário nenhum direito de propriedade intelectual sobre a plataforma.</p>
+
+    <h2 id="t9">9. Limitação de responsabilidade</h2>
+    <p>O RastreiaPedido não se responsabiliza por:</p>
+    <ul>
+      <li>Imprecisões do GPS do dispositivo do motoboy;</li>
+      <li>Falhas de conectividade de internet que interrompam o rastreio;</li>
+      <li>Danos decorrentes do uso indevido da plataforma pelo estabelecimento ou motoboy;</li>
+      <li>Atrasos ou falhas nos serviços de terceiros (plataforma de banco de dados em nuvem, nosso serviço de geocodificação e rotas, nossa plataforma de pagamentos);</li>
+      <li>Perdas indiretas, lucros cessantes ou danos emergentes relacionados ao uso do serviço.</li>
+    </ul>
+    <p>Nossa responsabilidade total, em qualquer hipótese, limita-se ao valor pago pelo usuário nos últimos 30 dias.</p>
+
+    <h2 id="t10">10. Suspensão e encerramento</h2>
+    <p>Podemos suspender ou encerrar o acesso de qualquer estabelecimento que:</p>
+    <ul>
+      <li>Viole estes Termos de Uso;</li>
+      <li>Utilize o sistema de forma fraudulenta ou abusiva;</li>
+      <li>Realize atividades que possam prejudicar outros usuários ou a infraestrutura do sistema.</li>
+    </ul>
+    <p>O estabelecimento pode encerrar sua conta a qualquer momento, solicitando a exclusão de seus dados pelo e-mail de contato.</p>
+
+    <h2 id="t11">11. Legislação aplicável e foro</h2>
+    <p>Estes Termos são regidos pela legislação brasileira, em especial o Código de Defesa do Consumidor (Lei 8.078/1990), o Marco Civil da Internet (Lei 12.965/2014) e a LGPD (Lei 13.709/2018).</p>
+    <p>Fica eleito o foro da comarca de <strong>Macapá, Amapá</strong>, com renúncia expressa a qualquer outro, por mais privilegiado que seja, para dirimir quaisquer controvérsias oriundas destes termos.</p>
+
+    <div class="contact-box">
+      <div class="icon">📋</div>
+      <div>
+        <h3>Dúvidas sobre os termos?</h3>
+        <p>Entre em contato conosco:<br>
+        <a href="mailto:contato@rastreiapedido.com.br">contato@rastreiapedido.com.br</a></p>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!-- POLÍTICA DE COOKIES                            -->
+  <!-- ══════════════════════════════════════════════ -->
+  <div class="doc-section" id="cookies">
+    <div class="badge">Guia de Cookies ANPD — 2024</div>
+    <div class="doc-title">Política de Cookies</div>
+    <div class="doc-date">Vigente desde <strong>12 de maio de 2026</strong> · Elaborada conforme o Guia Orientativo de Cookies da ANPD</div>
+
+    <div class="highlight info">
+      <div class="highlight-title">📌 Base normativa</div>
+      <p>Esta política foi elaborada em conformidade com o <strong>Guia Orientativo sobre Cookies e Proteção de Dados Pessoais</strong> publicado pela Autoridade Nacional de Proteção de Dados (ANPD) e com a Lei Geral de Proteção de Dados (LGPD — Lei 13.709/2018).</p>
+    </div>
+
+    <div class="toc">
+      <div class="toc-title">Índice</div>
+      <ol>
+        <li><a href="#c1">O que são cookies</a></li>
+        <li><a href="#c2">Cookies que utilizamos</a></li>
+        <li><a href="#c3">Cookies de terceiros</a></li>
+        <li><a href="#c4">Base legal</a></li>
+        <li><a href="#c5">Seus direitos e como gerenciar cookies</a></li>
+        <li><a href="#c6">Transferência internacional</a></li>
+        <li><a href="#c7">Contato</a></li>
+      </ol>
+    </div>
+
+    <h2 id="c1">1. O que são cookies</h2>
+    <p>Cookies são pequenos arquivos de texto armazenados no seu navegador quando você acessa um site. Eles permitem que o site reconheça seu dispositivo em visitas futuras e armazenem preferências de navegação.</p>
+    <p>Conforme o Guia de Cookies da ANPD, os cookies podem ser classificados quanto à <strong>origem</strong> (próprios ou de terceiros), à <strong>duração</strong> (sessão ou persistentes) e à <strong>finalidade</strong> (essenciais, funcionais, analíticos ou de marketing).</p>
+
+    <h2 id="c2">2. Cookies que utilizamos</h2>
+
+    <h3>2.1 Cookies estritamente necessários (sem necessidade de consentimento)</h3>
+    <p>São indispensáveis para o funcionamento do sistema. Conforme o Guia da ANPD, não requerem consentimento por serem baseados em legítimo interesse ou execução de contrato.</p>
+    <table>
+      <tr><th>Cookie</th><th>Finalidade</th><th>Duração</th><th>Origem</th></tr>
+      <tr><td>Sessão de dados da entrega</td><td>Manter a sessão de dados da entrega ativa</td><td>Sessão</td><td>nossa plataforma de banco de dados em nuvem</td></tr>
+      <tr><td>Preferências de entrega</td><td>Armazenar URL do plataforma de banco de dados em nuvem no localStorage</td><td>Persistente</td><td>Próprio</td></tr>
+    </table>
+
+    <div class="highlight neutral">
+      <div class="highlight-title">ℹ️ Nota técnica</div>
+      <p>O RastreiaPedido utiliza predominantemente <strong>localStorage</strong> (armazenamento local do navegador) em vez de cookies tradicionais para salvar preferências do estabelecimento. O localStorage não transmite dados ao servidor e segue as mesmas regras de privacidade dos cookies sob a LGPD.</p>
+    </div>
+
+    <h3>2.2 Cookies analíticos (requerem consentimento)</h3>
+    <p>Utilizados para entender como os usuários interagem com o sistema, permitindo melhorias.</p>
+    <table>
+      <tr><th>Cookie</th><th>Finalidade</th><th>Duração</th><th>Origem</th></tr>
+      <tr><td>_ga, _ga_*</td><td>Identificar sessões únicas e medir uso do site (nossa ferramenta de análise de tráfego)</td><td>2 anos</td><td>nossos parceiros de tecnologia</td></tr>
+      <tr><td>_gid</td><td>Distinguir usuários (nossa ferramenta de análise de tráfego)</td><td>24 horas</td><td>nossos parceiros de tecnologia</td></tr>
+    </table>
+
+    <h3>2.3 Cookies de publicidade (requerem consentimento)</h3>
+    <p>Utilizados pelo nossa plataforma de publicidade para exibir anúncios na versão gratuita do sistema.</p>
+    <table>
+      <tr><th>Cookie</th><th>Finalidade</th><th>Duração</th><th>Origem</th></tr>
+      <tr><td>__gads, __gpi</td><td>Controle de frequência e personalização de anúncios</td><td>13 meses</td><td>nossos parceiros de tecnologia</td></tr>
+      <tr><td>IDE</td><td>Publicidade personalizada pela plataforma de publicidade (plataforma de publicidade)</td><td>13 meses</td><td>nossos parceiros de tecnologia</td></tr>
+      <tr><td>ANID</td><td>Anúncios personalizados em serviços de publicidade</td><td>13 meses</td><td>nossos parceiros de tecnologia</td></tr>
+    </table>
+
+    <div class="highlight warning">
+      <div class="highlight-title">⚠️ Plano premium — sem cookies de publicidade</div>
+      <p>Estabelecimentos com plano premium ativo não visualizam anúncios. Consequentemente, os cookies de publicidade do nossa plataforma de publicidade (<code>__gads</code>, <code>IDE</code>, <code>ANID</code>) <strong>não são carregados</strong> nas páginas do painel premium.</p>
+    </div>
+
+    <h2 id="c3">3. Cookies de terceiros</h2>
+    <p>Alguns cookies são definidos por serviços de terceiros que utilizamos:</p>
+    <ul>
+      <li><strong>nossos parceiros de tecnologia (plataforma de banco de dados em nuvem, Analytics, nossa plataforma de publicidade):</strong> sujeitos à <a href="politicas.html">nossa Política de Privacidade</a>. Servidores nos EUA com adequação ao GDPR e SCCs aplicáveis.</li>
+      <li><strong>nossa plataforma de pagamentos:</strong> cookies de sessão durante o processo de pagamento. Sujeitos à <a href="https://www.rastreiapedido.com.br/politicas.html" target="_blank">Política de Privacidade do nossa plataforma de pagamentos</a>.</li>
+      <li><strong>nosso serviço de geocodificação e rotas:</strong> não define cookies — a comunicação ocorre via API server-side.</li>
+    </ul>
+    <p>Não temos controle sobre os cookies definidos por terceiros e recomendamos a leitura das políticas de privacidade de cada fornecedor.</p>
+
+    <h2 id="c4">4. Base legal para uso de cookies</h2>
+    <p>Seguindo o Guia de Cookies da ANPD, adotamos as seguintes bases legais:</p>
+    <table>
+      <tr><th>Categoria de cookie</th><th>Base legal (LGPD)</th><th>Consentimento necessário</th></tr>
+      <tr><td>Estritamente necessários</td><td>Legítimo interesse / Execução de contrato — art. 7º, V e IX</td><td>❌ Não</td></tr>
+      <tr><td>Funcionais / Preferências</td><td>Legítimo interesse — art. 7º, IX</td><td>❌ Não</td></tr>
+      <tr><td>Analíticos</td><td>Consentimento — art. 7º, I</td><td>✅ Sim</td></tr>
+      <tr><td>Publicidade/Marketing</td><td>Consentimento — art. 7º, I</td><td>✅ Sim</td></tr>
+    </table>
+
+    <h2 id="c5">5. Seus direitos e como gerenciar cookies</h2>
+    <h3>5.1 Consentimento</h3>
+    <p>Ao acessar o RastreiaPedido pela primeira vez, você verá um banner de cookies permitindo aceitar ou recusar cookies não essenciais. Você pode alterar sua escolha a qualquer momento.</p>
+
+    <h3>5.2 Gerenciamento pelo navegador</h3>
+    <p>Você pode configurar seu navegador para bloquear ou excluir cookies:</p>
+    <ul>
+      <li><strong>Google Chrome:</strong> Configurações → Privacidade e segurança → Cookies</li>
+      <li><strong>Mozilla Firefox:</strong> Configurações → Privacidade e Segurança</li>
+      <li><strong>Safari:</strong> Preferências → Privacidade</li>
+      <li><strong>Microsoft Edge:</strong> Configurações → Cookies e permissões de site</li>
+    </ul>
+    <p>Ao bloquear cookies essenciais, algumas funcionalidades do sistema podem não funcionar corretamente.</p>
+
+    <h3>5.3 Opt-out de publicidade do Google</h3>
+    <p>Você pode desativar a personalização de anúncios do Google em: <a href="mailto:privacidade@rastreiapedido.com.br">privacidade@rastreiapedido.com.br</a></p>
+
+    <h3>5.4 Seus direitos como titular</h3>
+    <p>Conforme a LGPD e o Guia da ANPD, você tem direito a:</p>
+    <ul>
+      <li>Ser informado sobre os cookies utilizados (este documento);</li>
+      <li>Consentir ou recusar cookies não essenciais;</li>
+      <li>Revogar o consentimento a qualquer momento;</li>
+      <li>Solicitar informações sobre dados tratados por meio de cookies.</li>
+    </ul>
+
+    <h2 id="c6">6. Transferência internacional de dados</h2>
+    <p>Alguns cookies de terceiros (especialmente do nossos parceiros de tecnologia) resultam em transferência de dados para servidores nos Estados Unidos. Esta transferência é realizada com base em:</p>
+    <ul>
+      <li>Cláusulas contratuais padrão (Standard Contractual Clauses — SCCs) aprovadas por autoridades de proteção de dados;</li>
+      <li>Certificações e frameworks de adequação aplicáveis.</li>
+    </ul>
+    <p>Para mais informações, consulte a <a href="politicas.html">nossa Política de Privacidade</a>.</p>
+
+    <h2 id="c7">7. Contato e atualização</h2>
+    <p>Esta política pode ser atualizada para refletir mudanças nas tecnologias utilizadas ou na legislação aplicável. A data de vigência sempre estará indicada no topo.</p>
+
+    <div class="contact-box">
+      <div class="icon">🍪</div>
+      <div>
+        <h3>Dúvidas sobre cookies?</h3>
+        <p>Entre em contato com nosso encarregado de dados:<br>
+        <a href="mailto:privacidade@rastreiapedido.com.br">privacidade@rastreiapedido.com.br</a><br><br>
+        Ou acesse o site da ANPD: <a href="https://www.gov.br/anpd" target="_blank">gov.br/anpd</a></p>
+      </div>
+    </div>
+  </div>
+
+</div><!-- fim .content -->
+
+<footer>
+  <p>RastreiaPedido © 2026 · <a href="politicas.html">Políticas e Termos</a> · <a href="index.html">Início</a></p>
+  <p style="margin-top:8px;">Elaborado em conformidade com a LGPD (Lei 13.709/2018) e o Guia de Cookies da ANPD</p>
+</footer>
+
+<script>
+  function showTab(id) {
+    // Esconde todos
+    document.querySelectorAll('.doc-section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    // Mostra o selecionado
+    document.getElementById(id).classList.add('active');
+    event.target.classList.add('active');
+    // Scroll para o topo do conteúdo
+    document.querySelector('.content').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+</script>
+</body>
+</html>
