@@ -1,5 +1,5 @@
 // netlify/functions/criar-pagamento.js
-const MP_ACCESS_TOKEN = process.env.MP_ACCESS_TOKEN || 'APP_USR-4512604873990905-051117-39f476a4ba2dde4bdba530b7b4de7822-35616274';
+const MP_ACCESS_TOKEN = process.env.MP_ACCESS_TOKEN;
 
 exports.handler = async (event) => {
   if (event.httpMethod === 'OPTIONS') {
